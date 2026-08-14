@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, forwardRef } from "react";
+import React, { useEffect, useRef, forwardRef } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Scene } from "../components/Scene";
 import { gsap } from "gsap";
@@ -13,6 +13,10 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
   // --- Master timeline for landing intro ---
   useEffect(() => {
     if (!landing.current) return;
+
+    // 1️⃣ Hide cursor immediately on mount
+    document.body.style.cursor = "none";
+    document.body.classList.add("loading");
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -48,29 +52,41 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
           const keyLightsTl = scene.keyLightsOn();
           const laptopBackT1 = scene.laptopBack();
 
-          if (cameraTl) tl.add(cameraTl.play());
-          if (laptopTl) tl.add(laptopTl.play(), "-=0.5");
+          // Create a nested timeline so GSAP sequences them correctly
+          const introSeq = gsap.timeline({
+            onComplete: () => {
+              // 2️⃣ Restore cursor ONLY after the entire sequence finishes
+              document.body.style.cursor = "auto";
+              document.body.classList.remove("loading");
+
+              textRef.current?.play();
+              setintro(true);
+            },
+          });
+
+          if (cameraTl) introSeq.add(cameraTl.play());
+          if (laptopTl) introSeq.add(laptopTl.play(), "-=0.5");
           if (keyLightsTl) {
-            tl.add(
+            introSeq.add(
               keyLightsTl.play().eventCallback("onStart", () => {
                 if (window.startPortfolioTyping) window.startPortfolioTyping();
               })
             );
           }
-          if (laptopBackT1) tl.add(laptopBackT1.play());
+          if (laptopBackT1) introSeq.add(laptopBackT1.play());
 
-          tl.call(() => {
-            textRef.current?.play();
-            setintro(true);
-          });
+          tl.add(introSeq);
         }
       }, 100);
 
-      // Cleanup interval on unmount
       return () => clearInterval(checkReady);
     }, landing);
 
-    return () => ctx.revert();
+    return () => {
+      // Safety cleanup: restore cursor if component unmounts prematurely
+      document.body.style.cursor = "auto";
+      ctx.revert();
+    };
   }, [landing, navbarRef, setintro]);
 
   // --- Laptop rotation linked to scroll ---
@@ -107,7 +123,6 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
         }
       }, 100);
 
-      // Cleanup
       return () => {
         clearInterval(checkReady);
         if (scrollAnim) scrollAnim.kill();
@@ -118,10 +133,7 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
   }, [intro]);
 
   return (
-    <div
-      ref={landing}
-      className="bg-[#0b0b0f] h-[110vh] relative"
-    >
+    <div ref={landing} className="bg-[#0b0b0f] h-[110vh] relative">
       <Scene
         ref={sceneRef}
         className="scene fixed inset-0 bg-[#0b0b0f] z-0 pointer-events-none block"

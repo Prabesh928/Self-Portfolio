@@ -1,10 +1,25 @@
 @import "tailwindcss";
 
+
+@layer base {
+  body.loading {
+    cursor: none;
+  }
+
+  body:not(.loading) {
+    cursor: default;
+  }
+}
+
 /* Fonts (safe) */
 @layer utilities {
   .font-heading { font-family: 'Bebas Neue', cursive; }
   .font-fancy { font-family: 'Dancing Script', cursive; }
   .font-display { font-family: 'Pacifico', cursive; }
+}
+
+body:not(.loading) {
+  cursor: default;
 }
 
 /* REQUIRED FOR LENIS */
@@ -20,4 +35,8 @@ html, body {
 
 html {
   scrollbar-width: none; /* Firefox */
+}
+
+body.loading {
+  cursor: none;
 }
