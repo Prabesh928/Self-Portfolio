@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Fonts (safe) */
+@layer utilities {
+  .font-heading { font-family: 'Bebas Neue', cursive; }
+  .font-fancy { font-family: 'Dancing Script', cursive; }
+  .font-display { font-family: 'Pacifico', cursive; }
+}
+
+/* REQUIRED FOR LENIS */
+html, body {
+  height: 100%;
+}
+
+/* OPTIONAL: hide scrollbar (SAFE) */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+html {
+  scrollbar-width: none; /* Firefox */
+}
