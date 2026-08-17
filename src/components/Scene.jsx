@@ -44,13 +44,27 @@ container.appendChild(renderer.domElement);
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = false;
 
-      // --- Lights ---
+      
       const ambientLight = new THREE.AmbientLight(0xffffff, 1);
       scene.add(ambientLight);
 
       const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
       dirLight1.position.set(0, 2, -4);
       scene.add(dirLight1);
+
+   // hellper for light2
+// const dirLight1Helper = new THREE.DirectionalLightHelper(dirLight1, 0.8, 0xff0000);
+// scene.add(dirLight1Helper);
+
+const dirLight2 = new THREE.DirectionalLight(0xffffff, 2);
+      dirLight2.position.set(2, 0.8, 1);
+      scene.add(dirLight2);
+
+      //helper for light2
+// const dirLight1Helper2 = new THREE.DirectionalLightHelper(dirLight2, 0.4,0xff0000);
+// scene.add(dirLight1Helper2);
+
+      
 
       // --- Load Model ---
       const dracoLoader = new DRACOLoader();
@@ -95,8 +109,8 @@ container.appendChild(renderer.domElement);
 
         // --- TIMELINE 1: Camera Movement (g1) ---
         const g1 = gsap.timeline({ paused: true });
-        g1.to(camera.position, { x: -1, y: 2, z: 3, duration: 2 })
-          .to(camera.position, { x: -0.073, y: 0.551, z: 1.212, duration: 2 });
+        g1
+          .to(camera.position, { x: -0.073, y: 0.551, z: 1.212, duration: 3 });
 
         // --- TIMELINE 2: Laptop Open (tl) ---
         const tl = gsap.timeline({ paused: true });
