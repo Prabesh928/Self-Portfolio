@@ -56,7 +56,7 @@ container.appendChild(renderer.domElement);
 // const dirLight1Helper = new THREE.DirectionalLightHelper(dirLight1, 0.8, 0xff0000);
 // scene.add(dirLight1Helper);
 
-const dirLight2 = new THREE.DirectionalLight(0xffffff, 2);
+const dirLight2 = new THREE.DirectionalLight(0xffffff, 3);
       dirLight2.position.set(2, 0.8, 1);
       scene.add(dirLight2);
 
@@ -110,50 +110,79 @@ const dirLight2 = new THREE.DirectionalLight(0xffffff, 2);
         // --- TIMELINE 1: Camera Movement (g1) ---
         const g1 = gsap.timeline({ paused: true });
         g1
-          .to(camera.position, { x: -0.073, y: 0.551, z: 1.212, duration: 3 });
+          .to(camera.position, { x: -0.073, y: 0.551, z: 1.212, duration:5 });
 
         // --- TIMELINE 2: Laptop Open (tl) ---
-        const tl = gsap.timeline({ paused: true });
-        if (screen) {
-          tl.to(screen.rotation, { x: -2.95, duration: 1 })
-            .to(screen.position, { z: -0.13, y: -0.11, duration: 1 }, "<")
-            .to(screen.rotation, { x: -3, duration: 1 }, "<")
-            .to(screen.position, { z: -0.11, y: -0.11, duration: 1 }, "<")
-            .to(screen.rotation, { x: -3.2, duration: 1 }, "<")
-            .to(screen.position, { z: -0.10, y: -0.11, duration: 1 }, "<")
-            .to(screen.rotation, { x: -3.27, duration: 1 }, "<")
-            .to(screen.position, { z: -0.09, y: -0.111, duration: 1 }, "<")
-            .to(camera.position, { x: -0.063, y: 0.485, z: 0.463, duration: 2 }, "<")
-            .to(camera.position, { x: 0.003, y: 0.522, z: 0.342, duration: 2 }, "<")
-            .to(screen.rotation, { x: -3.4, duration: 2 }, "<")
-            .to(screen.position, { z: -0.079, y: -0.111, duration: 1 }, "<")
-            .to(screen.rotation, { x: -3.5, duration: 2 }, "<")
-            .to(screen.position, { z: -0.072, y: -0.102, duration: 1 }, "<")
-            .to(screen.rotation, { x: -3.6, duration: 2 })
-            .to(screen.position, { z: -0.062, y: -0.099, duration: 1 }, "<")
-            .to(screen.rotation, { x: -3.8, duration: 2 }, "<")
-            .to(screen.position, { z: -0.045, y: -0.085, duration: 2 }, "<")
-            .to(screen.rotation, { x: -4, duration: 2 })
-            .to(screen.position, { z: -0.03, y: -0.075, duration: 2 }, "<")
-            .to(screen.rotation, { x: -4.2, duration: 2 }, "<")
-            .to(screen.position, { z: -0.012, y: -0.055, duration: 2 }, "<")
-            .to(screen.rotation, { x: -4.5, duration: 2 })
-            .to(screen.position, { z: -0.004, y: -0.023, duration: 2 }, "<");
-        }
+       
+// --- TIMELINE 2: Laptop Open (tl) ---
+const tl = gsap.timeline({ paused: true });
+const initialRotationX = camera.rotation.x;
+console.log("Initial X rotation:", initialRotationX);
 
+
+
+if (screen) {
+  // 1. Screen Rotation Sequence
+  
+  tl.to(screen.rotation, {
+    keyframes: [
+      { x: -2.95, duration: 1, ease: "none" },
+      { x: -3.27, duration: 1, ease: "none" },
+      { x: -3.5,  duration: 1, ease: "none" },
+      { x: -3.8,  duration: 1, ease: "none" },
+      { x: -4.2,  duration: 1, ease: "none" },
+      { x: -4.5,  duration: 1, ease: "power1.out" } // Smooth deceleration at the end
+    ]
+  }, 0)
+
+  // 2. Screen Position Sequence (Starts at time 0 alongside rotation)
+  .to(screen.position, {
+    keyframes: [
+      { z: -0.13,  y: -0.11,  duration: 1, ease: "none" },
+      { z: -0.09,  y: -0.111, duration: 1, ease: "none" },
+      { z: -0.072, y: -0.102, duration: 1, ease: "none" },
+      { z: -0.045, y: -0.085, duration: 1, ease: "none" },
+      { z: -0.012, y: -0.055, duration: 1, ease: "none" },
+      { z: -0.004, y: -0.023, duration: 1, ease: "power1.out" }
+    ]
+  }, 0)
+
+  // 3. Camera Position Sequence (Starts at time 0)
+  .to(camera.position, {
+    keyframes: [
+      { x: -0.063, y: 0.485, z: 0.463, duration: 3, ease: "power1.inOut" },
+      { x: 0.003,  y: 0.822, z: 0.542, duration: 3, ease: "power1.inOut" }
+      
+    ]
+  }, 0);
+
+  //to tilt camera down 
+ tl.to(camera.rotation, {
+  keyframes: [
+    // Step 1 (0s to 3s): Tilt down to -50° while laptop opens
+    { x: THREE.MathUtils.degToRad(-60), duration: 3, ease: "power1.inOut" },
+
+  ]
+}, 0);
+}
         // --- TIMELINE 3: Key Lights ---
         const keysTl = gsap.timeline({ paused: true });
         keyLights.forEach((light, i) => {
-          keysTl.fromTo(light, { intensity: 0 }, { intensity: 2, duration: 0.3, ease: "power2.inOut" }, i * 0.4);
+          keysTl.fromTo(light, { intensity: 0 }, { intensity: 2, duration: 0.5, ease: "power2.inOut" }, i * 0.4);
         });
         keysTl.to(keyLights, { intensity: 2, duration: 0.5, ease: "power2.out" });
+        keysTl.to(keyLights, { intensity: 0, duration: 1.2, ease: "power2.out" });
+
+        
 
         // --- TIMELINE 4: Laptop Back/Transform (T04) ---
         const T04 = gsap.timeline({ paused: true });
-        T04.to(laptop.rotation, { y: 5.58319, duration: 5, ease: "power2.inOut" }, 0)
-           .to(laptop.position, { x: originalScreen.laptopPosition.x, y: -0.2, z: originalScreen.laptopPosition.z, duration: 2 }, 0)
+        T04.to(camera.rotation, { x: initialRotationX, duration: 3, ease: "power2.inOut" }, 1)
+           .to(laptop.rotation, { y: 5.58319, duration:6, ease: "power2.inOut" }, 0)
+           .to(laptop.position, { x: originalScreen.laptopPosition.x, y: -0.2, z: originalScreen.laptopPosition.z, duration: 3 }, 0)
            .to(camera.position, { z: 2.2, y: 1, duration: 2 }, 1)
            .to(laptop.position, { x: 1, y: -0.5, duration: 4 }, 1);
+           
 
         // Assign to Refs
         cameraTlRef.current = g1;
