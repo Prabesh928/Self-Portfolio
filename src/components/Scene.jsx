@@ -47,30 +47,62 @@ export const Scene = forwardRef((props, ref) => {
       });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // 👈 add this
       renderer.setSize(container.clientWidth, container.clientHeight);
+
+      //  Tone Mapping & Soft Shadows
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.4;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+
       container.appendChild(renderer.domElement);
 
       // --- Controls ---
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = false;
 
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-      scene.add(ambientLight);
+      
 
-      const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
-      dirLight1.position.set(0, 2, -4);
-      scene.add(dirLight1);
 
-      // hellper for light2
-      // const dirLight1Helper = new THREE.DirectionalLightHelper(dirLight1, 0.8, 0xff0000);
-      // scene.add(dirLight1Helper);
+// 1. Ambient Light
+const ambientLight = new THREE.AmbientLight(0xfff8f0, 0.45);
+scene.add(ambientLight);
 
-      const dirLight2 = new THREE.DirectionalLight(0xffffff, 3);
-      dirLight2.position.set(2, 0.8, 1);
-      scene.add(dirLight2);
+// 2. Strong Right Light (UPDATED with normalBias & tighter bounds)
+const rightLight = new THREE.DirectionalLight(0xffecd6, 4.2);
+rightLight.position.set(4.5, 3.5, 2.5);
+rightLight.castShadow = true;
 
-      //helper for light2
-      // const dirLight1Helper2 = new THREE.DirectionalLightHelper(dirLight2, 0.4,0xff0000);
-      // scene.add(dirLight1Helper2);
+// Shadow Map Quality & Noise Removal
+rightLight.shadow.mapSize.width = 2048;   
+rightLight.shadow.mapSize.height = 2048;
+rightLight.shadow.bias = -0.0001;
+rightLight.shadow.normalBias = 0.03;      
+
+// Tight Camera Bounds (Prevents background floating shadows)
+rightLight.shadow.camera.near = 1;
+rightLight.shadow.camera.far = 10;
+rightLight.shadow.camera.left = -3;
+rightLight.shadow.camera.right = 3;
+rightLight.shadow.camera.top = 3;
+rightLight.shadow.camera.bottom = -3;
+
+scene.add(rightLight);
+
+// 3. Strong Top Light
+const topLight = new THREE.DirectionalLight(0xffffff, 2.8);
+topLight.position.set(0, 7, 1);
+scene.add(topLight);
+
+// 4. Floor Shadow Plane
+const shadowPlane = new THREE.Mesh(
+  new THREE.PlaneGeometry(20, 20),
+  new THREE.ShadowMaterial({ opacity: 0.35 })
+);
+shadowPlane.rotation.x = -Math.PI / 2;
+shadowPlane.position.y = -1.25;
+shadowPlane.receiveShadow = true;
+scene.add(shadowPlane);
 
       // --- Load Model ---
       const dracoLoader = new DRACOLoader();
@@ -84,6 +116,15 @@ export const Scene = forwardRef((props, ref) => {
       loader.load("/models/laptop.glb", (gltf) => {
         const laptop = gltf.scene;
         laptopObjectRef.current = laptop;
+        // shadow part
+  laptop.traverse((child) => {
+    if (child.isMesh) {
+     // Base receives & casts shadows, Screen only receives light
+      const isScreen = child.name.toLowerCase().includes("screen");
+      child.castShadow = !isScreen;  //too important topic mid-air shadows
+      child.receiveShadow = true;
+    }
+  });
         laptop.scale.set(5, 5, 5);
         scene.add(laptop);
 
@@ -96,6 +137,8 @@ export const Scene = forwardRef((props, ref) => {
           laptopPosition: laptop.position.clone(),
           cameraPosition: camera.position.clone(),
         };
+
+        console.log(laptop.rotateZ,laptop.rotateX, laptop.rotateY);
 
         // --- Initial State (Critical for React Alignment) ---
         if (screen) {
@@ -123,7 +166,7 @@ export const Scene = forwardRef((props, ref) => {
         // --- TIMELINE 2: Laptop Open (tl) ---
         const tl = gsap.timeline({ paused: true });
         const initialRotationX = camera.rotation.x;
-        console.log("Initial X rotation:", initialRotationX);
+        
 
         if (screen) {
           // 1. Screen Rotation Sequence
@@ -221,29 +264,44 @@ export const Scene = forwardRef((props, ref) => {
         });
 
         // --- TIMELINE 4: Laptop Back/Transform (T04) ---
-        const T04 = gsap.timeline({ paused: true });
-        T04.to(
-          camera.rotation,
-          { x: initialRotationX, duration: 3, ease: "power2.inOut" },
-          1,
-        )
-          .to(
-            laptop.rotation,
-            { y: 5.58319, duration: 6, ease: "power2.inOut" },
-            0,
-          )
-          .to(
-            laptop.position,
-            {
-              x: originalScreen.laptopPosition.x,
-              y: -0.2,
-              z: originalScreen.laptopPosition.z,
-              duration: 3,
-            },
-            0,
-          )
-          .to(camera.position, { z: 2.2, y: 1, duration: 2 }, 1)
-          .to(laptop.position, { x: 1, y: -0.5, duration: 4 }, 1);
+const T04 = gsap.timeline({ paused: true });
+
+T04.to(
+  camera.position,
+  { x: 0, y: 0.5, z: 3.2, duration: 4, ease: "power2.inOut" }, // 👈 Resets camera X to 0 so perspective is straight
+  0,
+)
+  .to(
+    camera.rotation,
+    { x: initialRotationX, y: 0, z: 0, duration: 4, ease: "power2.inOut" },
+    0,
+  )
+  .to(
+    laptop.rotation,
+    { x: 0, y: Math.PI * 2, z: 0, duration: 4, ease: "power2.inOut", overwrite: "auto"}, // 👈 Rotates clean 360° to face straight
+    0,
+  )
+  .to(
+    laptop.scale,
+    { x: 6, y: 6, z: 6, duration: 4, ease: "power2.inOut" },
+    0,
+  )
+  .to(
+    laptop.position,
+    {
+      x: 0,
+      y: -2.2,
+      z: -0.5,
+      duration: 4,
+      ease: "power2.inOut",
+      overwrite: "auto"
+    },
+    0,
+  );
+   
+
+
+  
 
         // Assign to Refs
         cameraTlRef.current = g1;
@@ -311,7 +369,7 @@ export const Scene = forwardRef((props, ref) => {
     <div
       ref={containerRef}
       className={props.className}
-      style={{ width: "100%", height: "100vh" }}
+      style={{ width: "100%", height: "110vh" }}
     />
   );
 });

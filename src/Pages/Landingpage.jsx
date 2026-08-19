@@ -103,7 +103,7 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
         if (laptopObject) {
           clearInterval(checkReady);
 
-          const BASE_ROT_Y = 5.58319;
+          const BASE_ROT_Y = 6.28318;
 
           scrollAnim = gsap.fromTo(
             laptopObject.rotation,
@@ -136,10 +136,10 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
     <div ref={landing} className="bg-[#0b0b0f] h-[110vh] relative">
       <Scene
         ref={sceneRef}
-        className="scene fixed inset-0 bg-[#0b0b0f] z-0 pointer-events-none block"
+        className="scene fixed   inset-0 bg-[#0b0b0f] z-0 pointer-events-none block"
       />
 
-      <div className="absolute left-10 top-1/2 -translate-y-1/2 z-20">
+      <div className="absolute left-120 top-45 -translate-y-1/2 z-20">
         <Landingtext ref={textRef} />
       </div>
     </div>

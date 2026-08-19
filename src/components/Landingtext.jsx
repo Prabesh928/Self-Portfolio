@@ -55,27 +55,27 @@ const Landingtext = forwardRef((props, ref) => {
   }));
 
   return (
-    <div className="text-white h-[30vh] w-[50vw] flex flex-col justify-around">
+    <div className="text-white h-[30vh] w-[35vw] flex flex-col justify-around  text-center">
       <h1
         ref={headingRef}
-        className="text-6xl tracking-widest"
+        className="text-4xl tracking-widest"
         style={{
           clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
           overflow: "hidden",
         }}
       >
-        MERN Stack Developer
+        Full‑Stack Frontend Developer
       </h1>
 
       <p
         ref={paraRef}
-        className="text-lg tracking-widest"
+        className="text-sm tracking-widest"
         style={{
           clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
           overflow: "hidden",
         }}
       >
-        Specializing in building full-stack web applications using the MERN stack, focused on performance, scalability, and maintainable code for real-world production environments.
+        I build modern, interactive web applications using React, Three.js, and the MERN stack. I focus on clean architecture, performance optimization, and scalable UI design. I also bring analytical skills in Python, SQL, and data visualization, making me adaptable across full‑stack, frontend, and data‑focused roles.
       </p>
     </div>
   );
