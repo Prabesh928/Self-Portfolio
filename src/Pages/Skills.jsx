@@ -122,7 +122,7 @@ const Skills = () => {
                 <p className="text-lg">Featured Skills</p>
               </div>
               <div className="down">
-                <p className="text-2xl">Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus veritatis minus, magnam quod corrupti esse ex id recusandae assumenda. Incidunt.</p>
+                <p className="text-2xl">Specializing in interactive 3D web experiences and scalable full-stack applications. I bridge the gap between creative visual design and engineering using Three.js, GSAP, and React to craft fluid, performance driven digital products.</p>
               </div>
 
 

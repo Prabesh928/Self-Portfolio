@@ -64,12 +64,12 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       
 
 
-// 1. Ambient Light
+// 1. Ambient Light (Ambient lights do not have direction, so no helper applies)
 const ambientLight = new THREE.AmbientLight(0xfff8f0, 0.45);
 scene.add(ambientLight);
 
 // 2. Strong Right Light (UPDATED with normalBias & tighter bounds)
-const rightLight = new THREE.DirectionalLight(0xffecd6, 4.2);
+const rightLight = new THREE.DirectionalLight(0xffecd6, 5);
 rightLight.position.set(4.5, 3.5, 2.5);
 rightLight.castShadow = true;
 
@@ -89,10 +89,20 @@ rightLight.shadow.camera.bottom = -3;
 
 scene.add(rightLight);
 
+// Helper for Right Light (Color: Orange / 0xff9900)
+// const rightLightHelper = new THREE.DirectionalLightHelper(rightLight, 1, 0xff9900);
+// scene.add(rightLightHelper);
+
+
 // 3. Strong Top Light
-const topLight = new THREE.DirectionalLight(0xffffff, 2.8);
+const topLight = new THREE.DirectionalLight(0xFFFBE5, 2.8);
 topLight.position.set(0, 7, 1);
 scene.add(topLight);
+
+// Helper for Top Light (Color: Cyan / 0x00ffff)
+// const topLightHelper = new THREE.DirectionalLightHelper(topLight, 1, 0x00ffff);
+// scene.add(topLightHelper);
+
 
 // 4. Floor Shadow Plane
 const shadowPlane = new THREE.Mesh(
