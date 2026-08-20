@@ -55,10 +55,10 @@ const Landingtext = forwardRef((props, ref) => {
   }));
 
   return (
-    <div className="text-white h-[30vh] w-[35vw] flex flex-col justify-around  text-center">
+    <div className=" h-[30vh] w-[45vw] flex flex-col justify-around  text-center">
       <h1
         ref={headingRef}
-        className="text-4xl tracking-widest"
+        className="text-4xl font-bold tracking-tight text-slate-300"
         style={{
           clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
           overflow: "hidden",
@@ -69,7 +69,7 @@ const Landingtext = forwardRef((props, ref) => {
 
       <p
         ref={paraRef}
-        className="text-sm tracking-widest"
+        className=" font-robot tracking-widest text-zinc-500"
         style={{
           clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)",
           overflow: "hidden",

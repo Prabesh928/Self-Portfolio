@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import Startpage from "./Pages/Startpage";
 import Landingpage from "./Pages/Landingpage";
 import Navbar from "./components/Navbar"
 import Workpage from "./Pages/Workpage";
@@ -15,9 +16,22 @@ function App() {
   const landing = useRef(null);
   const lenisRef = useRef(null); 
     const navbarRef = useRef(null);
+    const [hasStarted, setHasStarted] = useState(false);
     const [intro , setintro ] =useState(false);
     const [menuopen, setmenuopen]=useState(false);
     const menuRef = useRef(null)
+
+
+    //for user click 
+    const handleStartSite = () => {
+    // A. Silent audio unlock
+    const unlockAudio = new Audio();
+    unlockAudio.play().catch(() => {});
+
+    // B. Enable main site & animations
+    setHasStarted(true);
+    
+  };
 
     //for cursor 
     useEffect(() => {
@@ -146,13 +160,20 @@ useEffect(() => {
 
 
 
+
+
+
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen ">
+  {!hasStarted ? (
+    <Startpage onStart={handleStartSite} />
+  ) : (
+    <>
       <Menu ref={menuRef}/>
       <Navbar landing={landing} ref={navbarRef} menuopen={menuopen} setmenuopen={setmenuopen} className="fixed top-0 left-0  opacity-100 " />
       <div
         ref={cursor}
-       className={`fixed top-0 left-0 z-100 pointer-events-none
+        className={`fixed top-0 left-0 z-100 pointer-events-none
     bg-white/80 backdrop-blur-md
     h-14 w-14 rounded-full
     flex items-center justify-center
@@ -168,7 +189,9 @@ useEffect(() => {
       <Stackingdiv/>
       <Workpage />
       <Works/>
-    </div>
+    </>
+  )}
+</div>
   );
 }
 

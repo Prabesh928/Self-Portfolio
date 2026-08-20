@@ -10,6 +10,9 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const Scene = forwardRef((props, ref) => {
   const containerRef = useRef(null);
@@ -45,15 +48,14 @@ export const Scene = forwardRef((props, ref) => {
         antialias: true,
         alpha: true,
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // 👈 add this
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
       renderer.setSize(container.clientWidth, container.clientHeight);
 
-      //  Tone Mapping & Soft Shadows
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.4;
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
+      // Tone Mapping & Soft Shadows
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.4;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
       container.appendChild(renderer.domElement);
 
@@ -61,58 +63,60 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = false;
 
-      
+      // 1. Ambient Light
+      const ambientLight = new THREE.AmbientLight(0xfff8f0, 0.6);  
+      scene.add(ambientLight);
+
+      // 2. Strong Right Light
+      const rightLight = new THREE.DirectionalLight(0xffecd6, 5);   
+      rightLight.position.set(4.5, 3.5, 2.5);
+      rightLight.castShadow = true;                 
+
+      rightLight.shadow.mapSize.width = 2048;   
+      rightLight.shadow.mapSize.height = 2048;
+      rightLight.shadow.bias = -0.0001;
+      rightLight.shadow.normalBias = 0.03;      
+
+      rightLight.shadow.camera.near = 1;
+      rightLight.shadow.camera.far = 10;
+      rightLight.shadow.camera.left = -3;
+      rightLight.shadow.camera.right = 3;
+      rightLight.shadow.camera.top = 3;
+      rightLight.shadow.camera.bottom = -3;
+
+      scene.add(rightLight);
+
+      // 3. Strong Top Light
+      const topLight = new THREE.DirectionalLight(0xFFFBE5, 2.8);  
+      topLight.position.set(0, 7, 1);
+      scene.add(topLight);
+
+      // Spotlight (Starts at intensity 0)
+      const backLight = new THREE.SpotLight(0xffffff, 0); 
+      backLight.position.set(0, -5, -1.7); 
+      backLight.target.position.set(0, 3, -5); 
+      backLight.angle = Math.PI / 2;
+      backLight.penumbra = 0.8; 
+      backLight.distance = 20;
+
+      scene.add(backLight);
+      scene.add(backLight.target);
 
 
-// 1. Ambient Light (Ambient lights do not have direction, so no helper applies)
-const ambientLight = new THREE.AmbientLight(0xfff8f0, 0.45);
-scene.add(ambientLight);
+      //just for wall
 
-// 2. Strong Right Light (UPDATED with normalBias & tighter bounds)
-const rightLight = new THREE.DirectionalLight(0xffecd6, 5);
-rightLight.position.set(4.5, 3.5, 2.5);
-rightLight.castShadow = true;
+      // const backLightHelper = new THREE.SpotLightHelper(backLight, 0xff00ff);
+      // scene.add(backLightHelper);
 
-// Shadow Map Quality & Noise Removal
-rightLight.shadow.mapSize.width = 2048;   
-rightLight.shadow.mapSize.height = 2048;
-rightLight.shadow.bias = -0.0001;
-rightLight.shadow.normalBias = 0.03;      
-
-// Tight Camera Bounds (Prevents background floating shadows)
-rightLight.shadow.camera.near = 1;
-rightLight.shadow.camera.far = 10;
-rightLight.shadow.camera.left = -3;
-rightLight.shadow.camera.right = 3;
-rightLight.shadow.camera.top = 3;
-rightLight.shadow.camera.bottom = -3;
-
-scene.add(rightLight);
-
-// Helper for Right Light (Color: Orange / 0xff9900)
-// const rightLightHelper = new THREE.DirectionalLightHelper(rightLight, 1, 0xff9900);
-// scene.add(rightLightHelper);
-
-
-// 3. Strong Top Light
-const topLight = new THREE.DirectionalLight(0xFFFBE5, 2.8);
-topLight.position.set(0, 7, 1);
-scene.add(topLight);
-
-// Helper for Top Light (Color: Cyan / 0x00ffff)
-// const topLightHelper = new THREE.DirectionalLightHelper(topLight, 1, 0x00ffff);
-// scene.add(topLightHelper);
-
-
-// 4. Floor Shadow Plane
-const shadowPlane = new THREE.Mesh(
-  new THREE.PlaneGeometry(20, 20),
-  new THREE.ShadowMaterial({ opacity: 0.35 })
-);
-shadowPlane.rotation.x = -Math.PI / 2;
-shadowPlane.position.y = -1.25;
-shadowPlane.receiveShadow = true;
-scene.add(shadowPlane);
+      // 4. Floor Shadow Plane
+      const shadowPlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(20, 20),
+        new THREE.ShadowMaterial({ opacity: 0.35 })
+      );
+      shadowPlane.rotation.x = -Math.PI / 2;
+      shadowPlane.position.y = -1.25;
+      shadowPlane.receiveShadow = true;
+      scene.add(shadowPlane);
 
       // --- Load Model ---
       const dracoLoader = new DRACOLoader();
@@ -126,31 +130,33 @@ scene.add(shadowPlane);
       loader.load("/models/laptop.glb", (gltf) => {
         const laptop = gltf.scene;
         laptopObjectRef.current = laptop;
-        // shadow part
-  laptop.traverse((child) => {
-    if (child.isMesh) {
-     // Base receives & casts shadows, Screen only receives light
-      const isScreen = child.name.toLowerCase().includes("screen");
-      child.castShadow = !isScreen;  //too important topic mid-air shadows
-      child.receiveShadow = true;
-    }
-  });
+        
+        laptop.traverse((child) => {
+          if (child.isMesh) {
+            const isScreen = child.name.toLowerCase().includes("screen");
+            child.castShadow = !isScreen;  
+            child.receiveShadow = true;
+          }
+        });
         laptop.scale.set(5, 5, 5);
         scene.add(laptop);
 
-        const base =
-          laptop.getObjectByName("Base") || laptop.getObjectByName("base");
+        // Setup for wall behind 
+        const wallGeometry = new THREE.PlaneGeometry(15, 10);
+        const wallMaterial = new THREE.MeshStandardMaterial({ 
+          color: 0x0b0b0f, 
+          roughness: 0,  
+          metalness: 0
+        });
+
+        const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+        wall.position.set(0, 0, -3); 
+        scene.add(wall);
+
         const screen =
           laptop.getObjectByName("Screen") || laptop.getObjectByName("screen");
 
-        const originalScreen = {
-          laptopPosition: laptop.position.clone(),
-          cameraPosition: camera.position.clone(),
-        };
-
-        console.log(laptop.rotateZ,laptop.rotateX, laptop.rotateY);
-
-        // --- Initial State (Critical for React Alignment) ---
+        // --- Initial State ---
         if (screen) {
           screen.position.set(0, -0.098, -0.14);
           screen.rotateX(1.95);
@@ -177,10 +183,7 @@ scene.add(shadowPlane);
         const tl = gsap.timeline({ paused: true });
         const initialRotationX = camera.rotation.x;
         
-
         if (screen) {
-          // 1. Screen Rotation Sequence
-
           tl.to(
             screen.rotation,
             {
@@ -190,68 +193,46 @@ scene.add(shadowPlane);
                 { x: -3.5, duration: 1, ease: "none" },
                 { x: -3.8, duration: 1, ease: "none" },
                 { x: -4.2, duration: 1, ease: "none" },
-                { x: -4.5, duration: 1, ease: "power1.out" }, // Smooth deceleration at the end
+                { x: -4.5, duration: 1, ease: "power1.out" },
               ],
             },
             0,
           )
-
-            // 2. Screen Position Sequence (Starts at time 0 alongside rotation)
-            .to(
-              screen.position,
-              {
-                keyframes: [
-                  { z: -0.13, y: -0.11, duration: 1, ease: "none" },
-                  { z: -0.09, y: -0.111, duration: 1, ease: "none" },
-                  { z: -0.072, y: -0.102, duration: 1, ease: "none" },
-                  { z: -0.045, y: -0.085, duration: 1, ease: "none" },
-                  { z: -0.012, y: -0.055, duration: 1, ease: "none" },
-                  { z: -0.004, y: -0.023, duration: 1, ease: "power1.out" },
-                ],
-              },
-              0,
-            )
-
-            // 3. Camera Position Sequence (Starts at time 0)
-            .to(
-              camera.position,
-              {
-                keyframes: [
-                  {
-                    x: -0.063,
-                    y: 0.485,
-                    z: 0.463,
-                    duration: 3,
-                    ease: "power1.inOut",
-                  },
-                  {
-                    x: 0.003,
-                    y: 0.822,
-                    z: 0.542,
-                    duration: 3,
-                    ease: "power1.inOut",
-                  },
-                ],
-              },
-              0,
-            );
-
-          //to tilt camera down
-          tl.to(
+          .to(
+            screen.position,
+            {
+              keyframes: [
+                { z: -0.13, y: -0.11, duration: 1, ease: "none" },
+                { z: -0.09, y: -0.111, duration: 1, ease: "none" },
+                { z: -0.072, y: -0.102, duration: 1, ease: "none" },
+                { z: -0.045, y: -0.085, duration: 1, ease: "none" },
+                { z: -0.012, y: -0.055, duration: 1, ease: "none" },
+                { z: -0.004, y: -0.023, duration: 1, ease: "power1.out" },
+              ],
+            },
+            0,
+          )
+          .to(
+            camera.position,
+            {
+              keyframes: [
+                { x: -0.063, y: 0.485, z: 0.463, duration: 3, ease: "power1.inOut" },
+                { x: 0.003, y: 0.822, z: 0.542, duration: 3, ease: "power1.inOut" },
+              ],
+            },
+            0,
+          )
+          .to(
             camera.rotation,
             {
               keyframes: [
-                // Step 1 (0s to 3s): Tilt down to -50° while laptop opens
-                {
-                  x: THREE.MathUtils.degToRad(-60),
-                  duration: 3,
-                  ease: "power1.inOut",
-                },
+                { x: THREE.MathUtils.degToRad(-60), duration: 3, ease: "power1.inOut" },
               ],
             },
             0,
           );
         }
+
         // --- TIMELINE 3: Key Lights ---
         const keysTl = gsap.timeline({ paused: true });
         keyLights.forEach((light, i) => {
@@ -262,56 +243,39 @@ scene.add(shadowPlane);
             i * 0.4,
           );
         });
-        keysTl.to(keyLights, {
-          intensity: 2,
-          duration: 0.5,
-          ease: "power2.out",
-        });
-        keysTl.to(keyLights, {
-          intensity: 0,
-          duration: 1.2,
-          ease: "power2.out",
-        });
+        keysTl.to(keyLights, { intensity: 2, duration: 0.5, ease: "power2.out" });
+        keysTl.to(keyLights, { intensity: 0, duration: 1.2, ease: "power2.out" });
 
         // --- TIMELINE 4: Laptop Back/Transform (T04) ---
-const T04 = gsap.timeline({ paused: true });
+        const T04 = gsap.timeline({ paused: true });
 
-T04.to(
-  camera.position,
-  { x: 0, y: 0.5, z: 3.2, duration: 4, ease: "power2.inOut" }, // 👈 Resets camera X to 0 so perspective is straight
-  0,
-)
-  .to(
-    camera.rotation,
-    { x: initialRotationX, y: 0, z: 0, duration: 4, ease: "power2.inOut" },
-    0,
-  )
-  .to(
-    laptop.rotation,
-    { x: 0, y: Math.PI * 2, z: 0, duration: 4, ease: "power2.inOut", overwrite: "auto"}, // 👈 Rotates clean 360° to face straight
-    0,
-  )
-  .to(
-    laptop.scale,
-    { x: 6, y: 6, z: 6, duration: 4, ease: "power2.inOut" },
-    0,
-  )
-  .to(
-    laptop.position,
-    {
-      x: 0,
-      y: -2.2,
-      z: -0.5,
-      duration: 4,
-      ease: "power2.inOut",
-      overwrite: "auto"
-    },
-    0,
-  );
-   
+        T04.to(camera.position, { x: 0, y: 0.5, z: 3.2, duration: 4, ease: "power2.inOut" }, 0)
+          .to(camera.rotation, { x: initialRotationX, y: 0, z: 0, duration: 4, ease: "power2.inOut" }, 0)
+          .to(laptop.rotation, { x: 0, y: Math.PI * 2, z: 0, duration: 4, ease: "power2.inOut", overwrite: "auto"}, 0)
+          .to(laptop.scale, { x: 6, y: 6, z: 6, duration: 4, ease: "power2.inOut" }, 0)
+          .to(laptop.position, { x: 0, y: -2.2, z: -0.5, duration: 4, ease: "power2.inOut", overwrite: "auto" }, 0)
+          
+         
+          .to(ambientLight, { intensity: 0, duration: 0.4 }, 3.0)
+          .to(rightLight, { intensity: 0, duration: 0.4 }, "<")
+          .to(topLight, { intensity: 0, duration: 0.4 }, "<")
+          
+         
+          .to(backLight, { intensity: 900, duration: 0.6 }, "+=1");
 
-
-  
+        // --- SCROLL TRIGGER
+        ScrollTrigger.create({
+          trigger: containerRef.current,
+          start: "top top",
+          end: "+=0", 
+          once: true,  
+          onEnter: () => {
+            gsap.to(backLight, { intensity: 0, duration: 0.6 });
+            gsap.to(ambientLight, { intensity: 0.6, duration: 0.6 });
+            gsap.to(rightLight, { intensity: 5, duration: 0.6 });
+            gsap.to(topLight, { intensity: 2.8, duration: 0.6 });
+          }
+        });
 
         // Assign to Refs
         cameraTlRef.current = g1;
@@ -326,6 +290,7 @@ T04.to(
       let frameId;
       const animate = () => {
         frameId = requestAnimationFrame(animate);
+      
         renderer.render(scene, camera);
       };
       animate();
@@ -348,9 +313,8 @@ T04.to(
           container.removeChild(renderer.domElement);
         }
       };
-    }, containerRef); // Scope the GSAP context to the container
+    }, containerRef);
 
-    // Final Cleanup on Unmount
     return () => ctx.revert();
   }, []);
 

@@ -16,6 +16,7 @@
   .font-heading { font-family: 'Bebas Neue', cursive; }
   .font-fancy { font-family: 'Dancing Script', cursive; }
   .font-display { font-family: 'Pacifico', cursive; }
+  .font-robot { font-family: 'Plus Jakarta Sans' , sans-serif ;}
 }
 
 body:not(.loading) {
