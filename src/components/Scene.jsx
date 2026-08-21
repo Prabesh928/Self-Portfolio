@@ -53,7 +53,7 @@ export const Scene = forwardRef((props, ref) => {
 
       // Tone Mapping & Soft Shadows
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.4;
+      renderer.toneMappingExposure = 1.1;
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -67,6 +67,8 @@ export const Scene = forwardRef((props, ref) => {
       const ambientLight = new THREE.AmbientLight(0xfff8f0, 0.6);  
       scene.add(ambientLight);
 
+      
+
       // 2. Strong Right Light
       const rightLight = new THREE.DirectionalLight(0xffecd6, 5);   
       rightLight.position.set(4.5, 3.5, 2.5);
@@ -74,8 +76,8 @@ export const Scene = forwardRef((props, ref) => {
 
       rightLight.shadow.mapSize.width = 2048;   
       rightLight.shadow.mapSize.height = 2048;
-      rightLight.shadow.bias = -0.0001;
-      rightLight.shadow.normalBias = 0.03;      
+      rightLight.shadow.bias = -0.04;
+      rightLight.shadow.normalBias = 0.15;      
 
       rightLight.shadow.camera.near = 1;
       rightLight.shadow.camera.far = 10;
@@ -83,13 +85,21 @@ export const Scene = forwardRef((props, ref) => {
       rightLight.shadow.camera.right = 3;
       rightLight.shadow.camera.top = 3;
       rightLight.shadow.camera.bottom = -3;
+      rightLight.shadow.camera.updateProjectionMatrix();
 
       scene.add(rightLight);
+
+      const rightLight2 = new THREE.DirectionalLight(0xffecd6, 5);   
+      rightLight2.position.set(4.5, -1, 2.5);
+       scene.add(rightLight2);
+
+     
 
       // 3. Strong Top Light
       const topLight = new THREE.DirectionalLight(0xFFFBE5, 2.8);  
       topLight.position.set(0, 7, 1);
       scene.add(topLight);
+
 
       // Spotlight (Starts at intensity 0)
       const backLight = new THREE.SpotLight(0xffffff, 0); 
@@ -101,12 +111,6 @@ export const Scene = forwardRef((props, ref) => {
 
       scene.add(backLight);
       scene.add(backLight.target);
-
-
-      //just for wall
-
-      // const backLightHelper = new THREE.SpotLightHelper(backLight, 0xff00ff);
-      // scene.add(backLightHelper);
 
       // 4. Floor Shadow Plane
       const shadowPlane = new THREE.Mesh(
@@ -136,6 +140,8 @@ export const Scene = forwardRef((props, ref) => {
             const isScreen = child.name.toLowerCase().includes("screen");
             child.castShadow = !isScreen;  
             child.receiveShadow = true;
+
+            
           }
         });
         laptop.scale.set(5, 5, 5);
@@ -160,6 +166,12 @@ export const Scene = forwardRef((props, ref) => {
         if (screen) {
           screen.position.set(0, -0.098, -0.14);
           screen.rotateX(1.95);
+        }
+
+        if (screen && screen.material) {
+          screen.material.envMapIntensity = 0; 
+          screen.material.roughness = 0.4;     
+          screen.material.needsUpdate = true;
         }
 
         // --- Key lights setup ---
@@ -254,16 +266,18 @@ export const Scene = forwardRef((props, ref) => {
           .to(laptop.rotation, { x: 0, y: Math.PI * 2, z: 0, duration: 4, ease: "power2.inOut", overwrite: "auto"}, 0)
           .to(laptop.scale, { x: 6, y: 6, z: 6, duration: 4, ease: "power2.inOut" }, 0)
           .to(laptop.position, { x: 0, y: -2.2, z: -0.5, duration: 4, ease: "power2.inOut", overwrite: "auto" }, 0)
-          
-         
           .to(ambientLight, { intensity: 0, duration: 0.4 }, 3.0)
           .to(rightLight, { intensity: 0, duration: 0.4 }, "<")
           .to(topLight, { intensity: 0, duration: 0.4 }, "<")
           
-         
+          // ✨ ONLY turn off castShadow for the light (leaves renderer shadow map safe)
+          .call(() => {
+            rightLight.castShadow = false;
+          }, [], "<")
+          
           .to(backLight, { intensity: 900, duration: 0.6 }, "+=1");
 
-        // --- SCROLL TRIGGER
+        // --- SCROLL TRIGGER ---
         ScrollTrigger.create({
           trigger: containerRef.current,
           start: "top top",
@@ -271,6 +285,10 @@ export const Scene = forwardRef((props, ref) => {
           once: true,  
           onEnter: () => {
             gsap.to(backLight, { intensity: 0, duration: 0.6 });
+
+            // ✨ Turn shadow casting back on right when front lights return
+            rightLight.castShadow = true;
+            
             gsap.to(ambientLight, { intensity: 0.6, duration: 0.6 });
             gsap.to(rightLight, { intensity: 5, duration: 0.6 });
             gsap.to(topLight, { intensity: 2.8, duration: 0.6 });
@@ -290,7 +308,6 @@ export const Scene = forwardRef((props, ref) => {
       let frameId;
       const animate = () => {
         frameId = requestAnimationFrame(animate);
-      
         renderer.render(scene, camera);
       };
       animate();
