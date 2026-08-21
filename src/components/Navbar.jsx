@@ -11,6 +11,7 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
   const navLinksRef = useRef(null);
   const menuRef = useRef(null);
   const typewriterRef = useRef(null);
+  const playedRef = useRef(false);
 
   // Timeline animation for logo & links
   useEffect(() => {
@@ -38,13 +39,28 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
       );
     }, navbarRef);
 
-    return () => ctx.revert(); // clean up timeline
+    // safety net: if parent never calls startAnimation (e.g. onLoad missed/raced),
+    // force the timeline to play so navbar isn't stuck invisible
+    const fallback = setTimeout(() => {
+      if (!playedRef.current && tlRef.current) {
+        tlRef.current.play();
+        playedRef.current = true;
+      }
+    }, 4000);
+
+    return () => {
+      clearTimeout(fallback);
+      ctx.revert(); // clean up timeline
+    };
   }, []);
 
   // Expose startAnimation function to parent
   useImperativeHandle(ref, () => ({
     startAnimation: () => {
-      if (tlRef.current) tlRef.current.play();
+      if (tlRef.current && !playedRef.current) {
+        tlRef.current.play();
+        playedRef.current = true;
+      }
     },
   }));
 
@@ -53,11 +69,6 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
     if (!typewriterRef.current) return;
     typewriterRef.current.deleteAll().typeString("P o r t f o l i o").start();
   };
-
-  useEffect(() => {
-    window.startPortfolioTyping = startPortfolioTyping;
-    return () => delete window.startPortfolioTyping;
-  }, []);
 
   // ScrollTriggers for navbar visibility and nav links
   useEffect(() => {
@@ -69,23 +80,22 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
         trigger: landing.current,
         start: "-500px top",
         end: "-250px top",
-        ease: "back.out(1.7)",
         onToggle: (self) => {
-          if (self.isActive) navbarRef.current.classList.add("opacity-0");
-          else navbarRef.current.classList.remove("opacity-0");
+          if (self.isActive) navbarRef.current?.classList.add("opacity-0");
+          else navbarRef.current?.classList.remove("opacity-0");
         },
       });
 
       // Nav links hide/show, menu appear
       ScrollTrigger.create({
         trigger: landing.current,
-        start: "-330px top",
+        start: "top top", // Changed from -330px to 'top top' for accurate top-of-page alignment
         end: "bottom top",
-        ease: "back.out(1.7)",
         scrub: true,
         onUpdate: (self) => {
           if (menuopen) return; // skip while menu open
-          if (self.progress > 0.05) {
+          // Force check against actual window scroll position for bulletproof reliability
+          if (window.scrollY > 50 || self.progress > 0.05) {
             navLinksRef.current?.classList.add("hidden");
             menuRef.current?.classList.remove("hidden");
             menuRef.current?.classList.add("flex");
@@ -95,6 +105,14 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
             menuRef.current?.classList.add("hidden");
           }
         },
+        onRefresh: (self) => {
+          // Double check state whenever ScrollTrigger refreshes (e.g. window resize or load)
+          if (window.scrollY <= 10 && !menuopen) {
+            navLinksRef.current?.classList.remove("hidden");
+            menuRef.current?.classList.remove("flex");
+            menuRef.current?.classList.add("hidden");
+          }
+        }
       });
     }, navbarRef);
 
