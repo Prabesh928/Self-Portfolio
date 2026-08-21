@@ -39,8 +39,7 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
       );
     }, navbarRef);
 
-    // safety net: if parent never calls startAnimation (e.g. onLoad missed/raced),
-    // force the timeline to play so navbar isn't stuck invisible
+    // safety net: if parent never calls startAnimation, force play
     const fallback = setTimeout(() => {
       if (!playedRef.current && tlRef.current) {
         tlRef.current.play();
@@ -50,7 +49,7 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
 
     return () => {
       clearTimeout(fallback);
-      ctx.revert(); // clean up timeline
+      ctx.revert();
     };
   }, []);
 
@@ -64,11 +63,16 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
     },
   }));
 
-  // Typewriter logic
+  // Typewriter logic & window attachment so Landingpage can trigger it
   const startPortfolioTyping = () => {
     if (!typewriterRef.current) return;
     typewriterRef.current.deleteAll().typeString("P o r t f o l i o").start();
   };
+
+  useEffect(() => {
+    window.startPortfolioTyping = startPortfolioTyping;
+    return () => delete window.startPortfolioTyping;
+  }, []);
 
   // ScrollTriggers for navbar visibility and nav links
   useEffect(() => {
@@ -89,12 +93,11 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
       // Nav links hide/show, menu appear
       ScrollTrigger.create({
         trigger: landing.current,
-        start: "top top", // Changed from -330px to 'top top' for accurate top-of-page alignment
+        start: "top top",
         end: "bottom top",
         scrub: true,
         onUpdate: (self) => {
           if (menuopen) return; // skip while menu open
-          // Force check against actual window scroll position for bulletproof reliability
           if (window.scrollY > 50 || self.progress > 0.05) {
             navLinksRef.current?.classList.add("hidden");
             menuRef.current?.classList.remove("hidden");
@@ -105,8 +108,7 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
             menuRef.current?.classList.add("hidden");
           }
         },
-        onRefresh: (self) => {
-          // Double check state whenever ScrollTrigger refreshes (e.g. window resize or load)
+        onRefresh: () => {
           if (window.scrollY <= 10 && !menuopen) {
             navLinksRef.current?.classList.remove("hidden");
             menuRef.current?.classList.remove("flex");
@@ -116,7 +118,7 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
       });
     }, navbarRef);
 
-    return () => ctx.revert(); // clean up ScrollTriggers
+    return () => ctx.revert();
   }, [landing, menuopen]);
 
   // Force menu mode when menu is open
@@ -125,7 +127,7 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
       navLinksRef.current?.classList.add("hidden");
       menuRef.current?.classList.remove("hidden");
       menuRef.current?.classList.add("flex");
-      navbarRef.current?.classList.remove("opacity-0"); // ensure navbar visible
+      navbarRef.current?.classList.remove("opacity-0");
     }
   }, [menuopen]);
 
