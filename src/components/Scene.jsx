@@ -47,6 +47,7 @@ export const Scene = forwardRef((props, ref) => {
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
         alpha: true,
+        
       });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
       renderer.setSize(container.clientWidth, container.clientHeight);
@@ -72,7 +73,7 @@ export const Scene = forwardRef((props, ref) => {
       // 2. Strong Right Light
       const rightLight = new THREE.DirectionalLight(0xffecd6, 5);   
       rightLight.position.set(4.5, 3.5, 2.5);
-      rightLight.castShadow = true;                 
+      rightLight.castShadow = false;                 
 
       rightLight.shadow.mapSize.width = 2048;   
       rightLight.shadow.mapSize.height = 2048;

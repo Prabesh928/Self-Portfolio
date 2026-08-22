@@ -14,14 +14,14 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
   useEffect(() => {
     if (!landing.current) return;
 
-    // 1️⃣ Hide cursor immediately on mount
+    // 1️ Hide cursor immediately on mount
     document.body.style.cursor = "none";
     document.body.classList.add("loading");
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      // 0️⃣ Full page fade-in
+      // 0️ Full page fade-in
       tl.fromTo(
         landing.current,
         { y: 700, alpha: 1 },
@@ -33,7 +33,7 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
         if (navbarRef?.current) navbarRef.current.startAnimation();
       });
 
-      // 3️⃣ Animate Scene component appearance
+      // 3️ Animate Scene component appearance
       const sceneEl = landing.current.querySelector(".scene");
       if (sceneEl) {
         tl.from(sceneEl, { y: 50, opacity: 0, duration: 1.5 }, "-=0.5");
@@ -52,14 +52,15 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
           const keyLightsTl = scene.keyLightsOn();
           const laptopBackT1 = scene.laptopBack();
 
-          // Create a nested timeline so GSAP sequences them correctly
+          // Create a nested timeline 
           const introSeq = gsap.timeline({
             onComplete: () => {
-              // 2️⃣ Restore cursor ONLY after the entire sequence finishes
+              
               document.body.style.cursor = "auto";
               document.body.classList.remove("loading");
 
               textRef.current?.play();
+               ScrollTrigger.refresh();
               setintro(true);
             },
           });

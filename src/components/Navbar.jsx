@@ -13,7 +13,7 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
   const typewriterRef = useRef(null);
   const playedRef = useRef(false);
 
-  // Timeline animation for logo & links
+  // Timeline animation for logo n links
   useEffect(() => {
     const ctx = gsap.context(() => {
       tlRef.current = gsap.timeline({ paused: true });
@@ -39,7 +39,7 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
       );
     }, navbarRef);
 
-    // safety net: if parent never calls startAnimation, force play
+    // force if lag 
     const fallback = setTimeout(() => {
       if (!playedRef.current && tlRef.current) {
         tlRef.current.play();
@@ -53,7 +53,7 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
     };
   }, []);
 
-  // Expose startAnimation function to parent
+  //startAnimation function to parent
   useImperativeHandle(ref, () => ({
     startAnimation: () => {
       if (tlRef.current && !playedRef.current) {
@@ -63,7 +63,7 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
     },
   }));
 
-  // Typewriter logic & window attachment so Landingpage can trigger it
+  // Typewriter logic n window attachment 
   const startPortfolioTyping = () => {
     if (!typewriterRef.current) return;
     typewriterRef.current.deleteAll().typeString("P o r t f o l i o").start();
@@ -74,21 +74,22 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
     return () => delete window.startPortfolioTyping;
   }, []);
 
-  // ScrollTriggers for navbar visibility and nav links
+ 
   useEffect(() => {
     if (!landing?.current) return;
 
     const ctx = gsap.context(() => {
-      // Navbar hide/show based on scroll
-      ScrollTrigger.create({
-        trigger: landing.current,
-        start: "-500px top",
-        end: "-250px top",
-        onToggle: (self) => {
-          if (self.isActive) navbarRef.current?.classList.add("opacity-0");
-          else navbarRef.current?.classList.remove("opacity-0");
-        },
-      });
+      
+    ScrollTrigger.create({
+  trigger: landing.current,
+  markers: true,
+  start: 500,   // scrollY = 500px
+  end: 750,     // scrollY = 750px
+  onToggle: (self) => {
+    if (self.isActive) navbarRef.current?.classList.add("opacity-0");
+    else navbarRef.current?.classList.remove("opacity-0");
+  },
+});
 
       // Nav links hide/show, menu appear
       ScrollTrigger.create({
