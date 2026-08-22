@@ -60,7 +60,7 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
               document.body.classList.remove("loading");
 
               textRef.current?.play();
-               ScrollTrigger.refresh();
+               
               setintro(true);
             },
           });

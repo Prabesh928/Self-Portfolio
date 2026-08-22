@@ -281,7 +281,7 @@ export const Scene = forwardRef((props, ref) => {
         // --- SCROLL TRIGGER ---
         ScrollTrigger.create({
           trigger: containerRef.current,
-          start: "top top",
+          start: "top-=150 top",
           end: "+=0", 
           once: true,  
           onEnter: () => {

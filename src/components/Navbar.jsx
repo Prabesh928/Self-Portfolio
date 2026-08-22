@@ -82,7 +82,6 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
       
     ScrollTrigger.create({
   trigger: landing.current,
-  markers: true,
   start: 500,   // scrollY = 500px
   end: 750,     // scrollY = 750px
   onToggle: (self) => {
