@@ -9,6 +9,11 @@ import Menu from './Pages/Menu'
 import Works from './Pages/Works'
 import Skills from "./Pages/Skills";
 import Stackingdiv from "./components/Stackingdiv";
+import Demo from "./Pages/Demo"
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.defaults({ pinType: "transform" }); 
 
 
 function App() {
@@ -140,6 +145,7 @@ useEffect(() => {
     lenisRef.current = new Lenis({ duration: 1.6, smooth: true, smoothTouch: false, easing: t => 1 - Math.pow(1 - t, 2.5) });
   }
 
+    lenisRef.current.on('scroll', ScrollTrigger.update); 
   let rafId;
   const raf = (time) => {
     lenisRef.current?.raf(time);
@@ -189,6 +195,7 @@ useEffect(() => {
       <Stackingdiv/>
       <Workpage />
       <Works/>
+      {/* <Demo /> */}
     </>
   )}
 </div>

@@ -3,6 +3,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Scene } from "../components/Scene";
 import { gsap } from "gsap";
 import Landingtext from "../components/Landingtext";
+import Demo from "./Demo"
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -143,6 +144,7 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
       <div className="absolute left-100 top-45 -translate-y-1/2 z-20">
         <Landingtext ref={textRef} />
       </div>
+      
     </div>
   );
 });
