@@ -96,7 +96,7 @@ const Skilltext = () => {
         {letters.map((char, i) => (
           <span
             key={i}
-            className="letter-item absolute text-white font-bold text-6xl select-none"
+            className="letter-item absolute text-white  text-6xl select-none"
             style={{ 
               display: 'inline-block',
               lineHeight: '0.8',

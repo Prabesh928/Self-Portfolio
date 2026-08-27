@@ -3,7 +3,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Scene } from "../components/Scene";
 import { gsap } from "gsap";
 import Landingtext from "../components/Landingtext";
-import Demo from "./Demo"
+
 
 gsap.registerPlugin(ScrollTrigger);
 
