@@ -35,8 +35,8 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
         trigger: ".moving3",  
         start: "top 85%",    
         end: "top 10%",       
-        scrub: 1,
-        markers: true,
+        scrub: 1
+        
       }
     });
   
