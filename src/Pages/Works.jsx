@@ -48,9 +48,9 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
  
 
   return (
-    <div className='bg-blue-300  w-screen h-[215vh] py-40' >
-      <div className="workshows bg-gray-500  h-[215vh] w-full relative flex flex-col gap-12  " ref={worksRef}>
-        <div className='first bg-red-300  w-full h-[24%] mt-15 flex   '>
+    <div className='bg-white  w-screen h-[215vh] py-40' >
+      <div className="workshows   h-[215vh] w-full relative flex flex-col gap-12  " ref={worksRef}>
+        <div className='first  w-full h-[24%] mt-15 flex   '>
           <div className="movingfirst  h-[60%] w-[28%] ml-50 mt-35 z-50">
             <video 
     src={typingfirst}
@@ -65,7 +65,7 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
             <img src={contact} className='object-cover h-full w-full' />
           </div>
         </div>
-        <div className="second bg-yellow-300  w-full h-[30%] mt-15 flex">
+        <div className="second   w-full h-[30%] mt-15 flex">
           <div className="movingfirst  h-[60%] w-[28%] ml-50 mt-10 z-50">
             <img src={office} className='object-cover h-full w-full' />
           </div>
@@ -80,7 +80,7 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
   />
           </div>
         </div>
-        <div className="centerone bg-red-500 h-[42%] w-[25%]  z-20 absolute m-auto left-[35%]">
+        <div className="centerone  h-[42%] w-[25%]  z-20 absolute m-auto left-[35%]">
           <img src={long} className='object-cover h-full w-full' />
         </div>
 
