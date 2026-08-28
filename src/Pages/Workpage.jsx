@@ -36,7 +36,7 @@ const Workpage = () => {
   return (
     <div className='h-screen w-[full] bg-[#0b0b0f] text-white flex flex-col justify-around relative ' ref={containerRef}>
       <div className="workpagefirst  w-full h-[10%] flex justify-center items-end">
-        <p className='text-center'>Work in Motion</p>
+        <p className='text-center'>Full-Stack Engineering</p>
       </div>
 
       <div className="workpagesecond  h-[75%] flex items-center justify-between px-35">
@@ -50,7 +50,7 @@ const Workpage = () => {
 
 
       <div className="workpagethird  w-full h-[15%] flex justify-center items-center">
-        <p className='text-center'>Our work is best experienced in motion.<br/> Don’t forget to put on your headphones.</p>
+        <p className='text-center'>Merging robust MERN backend architecture with<br/> high-performance, animated frontend interfaces.</p>
       </div>
 
       <div className="workbackground absolute inset-0 m-auto h-[25%] w-[25%] z-20">

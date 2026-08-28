@@ -85,21 +85,21 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
         </div>
 
 
-      <div className="moving3 h-[40%] w-[48%] bg-white absolute left-[25%] bottom-0 flex flex-col items-center justify-center p-6 text-center shadow-lg ">
+      <div className="moving3 h-[40%] w-[48%] bg-white absolute left-[25%] bottom-0 flex flex-col items-center justify-center p-6 text-center ">
   
   {/* Small Top Tag */}
-  <div className="flex items-center gap-1.5 text-xs text-neutral-500 tracking-wide mb-3">
+  <div className="flex items-center gap-1.5  text-black text-default tracking-wide mb-3">
     <span>✦</span>
     <span>Selected Works</span>
   </div>
 
   {/* Main Huge Heading */}
-  <h2 className="text-8xl xl:text-8xl font-semibold tracking-tight text-neutral-900 leading-tight mb-4">
+  <h2 className="text-9xl xl:text-9xl font-semibold tracking-tight text-neutral-900 leading-tight mb-4">
     Featured <br /> Projects
   </h2>
 
   {/* Subtext Paragraph */}
-  <p className="text-xs sm:text-sm text-neutral-600 max-w-sm mb-6 leading-relaxed">
+  <p className="text-xs sm:text-lg text-neutral-600 max-w-sm mb-6 leading-relaxed">
    Explore a collection of high-performance web applications, responsive interfaces, and full-stack solutions.
   </p>
 
@@ -109,7 +109,7 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
     className="inline-flex items-center gap-2 text-xs tracking-wider text-neutral-900 hover:opacity-70 transition-opacity"
   >
     <span className="text-[10px]">○</span> 
-    <span className="border-b border-neutral-900 pb-0.5">Browse all news</span>
+    <span className="border-b border-neutral-900 pb-0.5">Browse all Work</span>
   </a>
 
 </div>
