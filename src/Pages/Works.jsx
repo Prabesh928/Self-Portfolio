@@ -9,6 +9,7 @@ import typingsecond from '../assets/typingtwo.mp4'
 import office from '../assets/office.jpg'
 import contact from '../assets/contact.jpg'
 gsap.registerPlugin(ScrollTrigger);
+import Footer from '../components/Footer'
 
 const Works = () => {
 
@@ -39,6 +40,15 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
         
       }
     });
+
+    ScrollTrigger.create({
+  trigger: ".moving4",
+  start: "top top",
+  end: "+=100%",
+  scrub: true,
+  pin:true,
+  markers:true
+});
   
 
   },{scope:worksRef})
@@ -48,7 +58,7 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
  
 
   return (
-    <div className='bg-white  w-screen h-[215vh] py-40' >
+    <div className='bg-white  w-screen h-[325vh] py-40' >
       <div className="workshows   h-[215vh] w-full relative flex flex-col gap-12  " ref={worksRef}>
         <div className='first  w-full h-[24%] mt-15 flex   '>
           <div className="movingfirst  h-[60%] w-[28%] ml-50 mt-35 z-50">
@@ -85,7 +95,7 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
         </div>
 
 
-      <div className="moving3 h-[40%] w-[48%] bg-white absolute left-[25%] bottom-0 flex flex-col items-center justify-center p-6 text-center ">
+      <div className="moving3 h-[40%] w-full bg-white absolute bottom-0 flex flex-col items-center justify-center z-6 p-6 text-center ">
   
   {/* Small Top Tag */}
   <div className="flex items-center gap-1.5  text-black text-default tracking-wide mb-3">
@@ -113,7 +123,15 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
   </a>
 
 </div>
+
+
+
+<div className="moving4 h-[100vh] w-full absolute left-0 bottom-0 z-5 bg-black">
+ <Footer/>
+</div>
       </div>
+
+
       
 
       

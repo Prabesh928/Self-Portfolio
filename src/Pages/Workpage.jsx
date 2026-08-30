@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import man from '../assets/man.jpg'
 
+
 gsap.registerPlugin(ScrollTrigger);
 
 const Workpage = () => {
@@ -54,7 +55,7 @@ const Workpage = () => {
       </div>
 
       <div className="workbackground absolute inset-0 m-auto h-[25%] w-[25%] z-20">
-        <img src={man} className='object-cover h-full w-full' />
+        
       </div>
         
     </div>
