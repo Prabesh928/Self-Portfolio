@@ -95,7 +95,7 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
         </div>
 
 
-      <div className="moving3 h-[40%] w-full bg-white absolute bottom-0 flex flex-col items-center justify-center z-6 p-6 text-center ">
+      <div className="moving3 h-[50%] w-full bg-white absolute bottom-0 flex flex-col items-center justify-center z-6 p-6 text-center ">
   
   {/* Small Top Tag */}
   <div className="flex items-center gap-1.5  text-black text-default tracking-wide mb-3">
