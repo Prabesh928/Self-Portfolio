@@ -90,22 +90,37 @@ export const Scene = forwardRef((props, ref) => {
             // (e.g. 3415 / 683 = 5, matching the original Blender Sun
             // strength). Adjust the trailing multiplier to taste.
             if (child.type === "DirectionalLight") {
-              child.intensity = (child.intensity / 683) * 1;
+              // Convert Blender's lux-converted intensity back to a
+              // sane Three.js value (Blender exports Sun Strength in
+              // W/m^2 as lux = W/m^2 * 683, so we divide back out).
+              child.intensity = child.intensity / 683;
 
-              // IMPORTANT: Three.js DirectionalLight ignores rotation for
-              // lighting direction - it only uses position -> target.
-              // Blender's Sun direction comes from rotation, so GLTFLoader
-              // sets the correct quaternion on the object, but Three.js
-              // never reads it for shading. We rebuild the target point
-              // by projecting forward along the light's local -Z axis
-              // (Three.js light convention) from its current position.
+              // Three.js DirectionalLight ignores the object's rotation
+              // for lighting direction - it only uses position -> target.
+              // Blender's Sun direction comes from rotation, so we must
+              // rebuild a target point using the light's WORLD rotation
+              // and WORLD position (important if the light is parented
+              // to anything in Blender - local transform alone would be
+              // wrong in that case).
+              const worldPos = new THREE.Vector3();
+              const worldQuat = new THREE.Quaternion();
+              child.getWorldPosition(worldPos);
+              child.getWorldQuaternion(worldQuat);
+
               const forward = new THREE.Vector3(0, 0, -1);
-              forward.applyQuaternion(child.quaternion);
-              const targetPos = child.position.clone().add(forward);
+              forward.applyQuaternion(worldQuat);
+
+              const targetPos = worldPos.clone().add(forward);
 
               child.target.position.copy(targetPos);
               scene.add(child.target);
               child.target.updateMatrixWorld();
+
+              console.log(
+                "Sun world position:", worldPos,
+                "target:", targetPos,
+                "final intensity:", child.intensity
+              );
             } else {
               child.intensity *= 0.01;
             }

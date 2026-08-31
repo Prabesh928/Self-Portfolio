@@ -47,7 +47,7 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
   end: "+=100%",
   scrub: true,
   pin:true,
-  markers:true
+
 });
   
 
