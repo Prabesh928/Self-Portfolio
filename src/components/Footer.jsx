@@ -8,7 +8,6 @@ import React, {
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -40,23 +39,10 @@ export const Scene = forwardRef((props, ref) => {
 
       container.appendChild(renderer.domElement);
 
-      // --- Lighting Setup (Matched exactly to Blender composition) ---
-      const sunLight = new THREE.DirectionalLight(0xfffaed, 2.5);
-      sunLight.position.set(1.6853, -4.2918, 2.2761);
-      sunLight.castShadow = true;
-      scene.add(sunLight);
-
-      const spotLight = new THREE.SpotLight(0xfffaed, 200);
-      spotLight.position.set(-12.85, -29.472, 21.805);
-      spotLight.rotation.set(
-        THREE.MathUtils.degToRad(38.564),
-        THREE.MathUtils.degToRad(9.4694),
-        THREE.MathUtils.degToRad(3.5783)
-      );
-      spotLight.angle = THREE.MathUtils.degToRad(46.1) / 2;
-      spotLight.penumbra = 0.5;
-      spotLight.castShadow = true;
-      scene.add(spotLight);
+      // NOTE: No manual lights here anymore.
+      // All lights (Sun/Spot/Point) were added in Blender and are baked
+      // into final.glb. GLTFLoader auto-converts them into THREE.Light
+      // objects and they come in automatically with gltf.scene below.
 
       // --- Loaders ---
       const dracoLoader = new DRACOLoader();
@@ -68,19 +54,73 @@ export const Scene = forwardRef((props, ref) => {
       loader.setDRACOLoader(dracoLoader);
 
       let camera;
-      let controls;
       let frameId;
+      let cancelled = false;
 
-      // --- Load Unified Final GLB Model with Exported Camera ---
+      // --- Load Unified Final GLB Model with Camera + Lights baked in ---
       loader.load("/models/final.glb", (gltf) => {
+        // Guard against React StrictMode double-invoking this effect in
+        // development, which would otherwise load the model twice and
+        // stack duplicate lights/meshes into the scene (causing the
+        // overexposed/white look even after intensity scaling).
+        if (cancelled) return;
+
         scene.add(gltf.scene);
 
-        // Use the camera exported from Blender if available, otherwise fallback
+        const mars = gltf.scene.getObjectByName("Mars");
+
+        // Optional: enable shadow casting/receiving on meshes,
+        // since Blender export doesn't always set this per-object.
+        gltf.scene.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+          if (child.isLight) {
+            child.castShadow = true;
+            console.log(
+              "Light loaded:",
+              child.type,
+              "raw intensity:",
+              child.intensity
+            );
+            // Blender's glTF export converts Sun Strength (W/m^2) into
+            // lux using: lux = W/m^2 * 683. Three.js intensity isn't in
+            // lux by default, so we divide back out to get a sane value
+            // (e.g. 3415 / 683 = 5, matching the original Blender Sun
+            // strength). Adjust the trailing multiplier to taste.
+            if (child.type === "DirectionalLight") {
+              child.intensity = (child.intensity / 683) * 1;
+
+              // IMPORTANT: Three.js DirectionalLight ignores rotation for
+              // lighting direction - it only uses position -> target.
+              // Blender's Sun direction comes from rotation, so GLTFLoader
+              // sets the correct quaternion on the object, but Three.js
+              // never reads it for shading. We rebuild the target point
+              // by projecting forward along the light's local -Z axis
+              // (Three.js light convention) from its current position.
+              const forward = new THREE.Vector3(0, 0, -1);
+              forward.applyQuaternion(child.quaternion);
+              const targetPos = child.position.clone().add(forward);
+
+              child.target.position.copy(targetPos);
+              scene.add(child.target);
+              child.target.updateMatrixWorld();
+            } else {
+              child.intensity *= 0.01;
+            }
+          }
+        });
+
+        // Use the camera exported from Blender (Camera001).
+        // gltf.cameras[0] will be whichever camera was set active
+        // in Blender at export time (Ctrl+Numpad0 before exporting).
         if (gltf.cameras && gltf.cameras.length > 0) {
           camera = gltf.cameras[0];
           camera.aspect = container.clientWidth / container.clientHeight;
           camera.updateProjectionMatrix();
         } else {
+          // Fallback only runs if no camera was exported in the GLB.
           camera = new THREE.PerspectiveCamera(
             50,
             container.clientWidth / container.clientHeight,
@@ -91,19 +131,12 @@ export const Scene = forwardRef((props, ref) => {
           camera.lookAt(0, 0, 0);
         }
 
-        // --- Controls (Touch/mouse interaction fully locked to preserve Numpad 0 view) ---
-        controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.target.set(0, 0, 0);
-        controls.enableRotate = false;
-        controls.enableZoom = false;
-        controls.enablePan = false;
-        controls.enableKeys = false;
-
         // --- Animation Loop ---
         const animate = () => {
           frameId = requestAnimationFrame(animate);
-          controls.update();
+          if (mars) {
+            mars.rotation.y += 0.0005;
+          }
           renderer.render(scene, camera);
         };
         animate();
@@ -121,6 +154,7 @@ export const Scene = forwardRef((props, ref) => {
       window.addEventListener("resize", handleResize);
 
       return () => {
+        cancelled = true;
         window.removeEventListener("resize", handleResize);
         if (frameId) cancelAnimationFrame(frameId);
         renderer.dispose();
