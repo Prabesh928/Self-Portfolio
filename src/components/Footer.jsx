@@ -25,6 +25,8 @@ export const Scene = forwardRef((props, ref) => {
       // --- Scene ---
       const scene = new THREE.Scene();
 
+     
+
       // --- Renderer ---
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -39,11 +41,7 @@ export const Scene = forwardRef((props, ref) => {
 
       container.appendChild(renderer.domElement);
 
-      // NOTE: No manual lights here anymore.
-      // All lights (Sun/Spot/Point) were added in Blender and are baked
-      // into final.glb. GLTFLoader auto-converts them into THREE.Light
-      // objects and they come in automatically with gltf.scene below.
-
+    
       // --- Loaders ---
       const dracoLoader = new DRACOLoader();
       dracoLoader.setDecoderPath(
@@ -58,7 +56,7 @@ export const Scene = forwardRef((props, ref) => {
       let cancelled = false;
 
       // --- Load Unified Final GLB Model with Camera + Lights baked in ---
-      loader.load("/models/final.glb", (gltf) => {
+      loader.load("/models/final2.glb", (gltf) => {
         // Guard against React StrictMode double-invoking this effect in
         // development, which would otherwise load the model twice and
         // stack duplicate lights/meshes into the scene (causing the
@@ -84,58 +82,25 @@ export const Scene = forwardRef((props, ref) => {
               "raw intensity:",
               child.intensity
             );
-            // Blender's glTF export converts Sun Strength (W/m^2) into
-            // lux using: lux = W/m^2 * 683. Three.js intensity isn't in
-            // lux by default, so we divide back out to get a sane value
-            // (e.g. 3415 / 683 = 5, matching the original Blender Sun
-            // strength). Adjust the trailing multiplier to taste.
+
             if (child.type === "DirectionalLight") {
-              // Convert Blender's lux-converted intensity back to a
-              // sane Three.js value (Blender exports Sun Strength in
-              // W/m^2 as lux = W/m^2 * 683, so we divide back out).
-              child.intensity = child.intensity / 683;
-
-              // Three.js DirectionalLight ignores the object's rotation
-              // for lighting direction - it only uses position -> target.
-              // Blender's Sun direction comes from rotation, so we must
-              // rebuild a target point using the light's WORLD rotation
-              // and WORLD position (important if the light is parented
-              // to anything in Blender - local transform alone would be
-              // wrong in that case).
-              const worldPos = new THREE.Vector3();
-              const worldQuat = new THREE.Quaternion();
-              child.getWorldPosition(worldPos);
-              child.getWorldQuaternion(worldQuat);
-
-              const forward = new THREE.Vector3(0, 0, -1);
-              forward.applyQuaternion(worldQuat);
-
-              const targetPos = worldPos.clone().add(forward);
-
-              child.target.position.copy(targetPos);
-              scene.add(child.target);
-              child.target.updateMatrixWorld();
-
-              console.log(
-                "Sun world position:", worldPos,
-                "target:", targetPos,
-                "final intensity:", child.intensity
-              );
+           
+              child.intensity = 5;
             } else {
-              child.intensity *= 0.01;
+              child.intensity *= 1;
             }
           }
         });
 
-        // Use the camera exported from Blender (Camera001).
-        // gltf.cameras[0] will be whichever camera was set active
-        // in Blender at export time (Ctrl+Numpad0 before exporting).
+      
+
+       
         if (gltf.cameras && gltf.cameras.length > 0) {
           camera = gltf.cameras[0];
           camera.aspect = container.clientWidth / container.clientHeight;
           camera.updateProjectionMatrix();
         } else {
-          // Fallback only runs if no camera was exported in the GLB.
+          
           camera = new THREE.PerspectiveCamera(
             50,
             container.clientWidth / container.clientHeight,
@@ -150,7 +115,7 @@ export const Scene = forwardRef((props, ref) => {
         const animate = () => {
           frameId = requestAnimationFrame(animate);
           if (mars) {
-            mars.rotation.y += 0.0005;
+            mars.rotation.y += 0.007;
           }
           renderer.render(scene, camera);
         };
@@ -198,8 +163,51 @@ export const Scene = forwardRef((props, ref) => {
 
 const Footer = () => {
   return (
-    <div className="w-full h-full">
-      <Scene className="w-full h-full" />
+   <div className="relative w-full h-screen overflow-hidden">
+      {/* 3D Scene locked to the background */}
+      <Scene className="absolute inset-0 w-full h-full z-0 pointer-events-none" />
+
+      {/* Content wrapper using absolute positioning with precise placement */}
+      <div className="absolute top-[48%] left-10 z-10 w-full h-full p-6 px-50  backdrop-blur-md rounded-lg text-[#DCCCBC]">
+       <div className="h-full w-full flex flex-col">
+        <div className="h-[18%]  text-2xl w-full font-semibold">
+          <p>Currently exploring new opportunities   <br/>to grow in full-stack engineering.</p>
+        </div>
+        <div className="bg-[#DCCCBC] h-[0.3%] w-full"></div>
+        <div className="h-[60%] mt-15  flex justify-around items-center gap-13">
+          <div className="first w-[15%] h-full ">
+            <div className="flex h-full w-full flex-col gap-2">
+              <p>Work</p>
+              <p>About</p>
+              <p>prabeshgyawali@gmail.com</p>
+              <p>Linkend</p>
+            </div>
+          </div>
+          <div className="second w-[15%] h-full ">
+             <div className="flex h-full w-full flex-col gap-2">
+              <p>Onion</p>
+              <p>Github</p>
+              <p>Instagrm</p>
+              <p>News</p>
+            </div>
+          </div>
+          <div className="third w-[15%] h-full ">
+             <div className="flex h-full w-full flex-col gap-2">
+              <p>Projects</p>
+              <p>About</p>
+              <p>Blog</p>
+              <p>Linkend</p>
+            </div>
+          </div>
+          <div className="fourth ml-auto w-[15%] h-[70%]  flex flex-col">
+            <p className=" underline">About Me</p>
+          </div>
+         
+
+           </div> 
+       </div>
+
+      </div>
     </div>
   );
 };
