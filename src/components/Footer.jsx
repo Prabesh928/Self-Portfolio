@@ -32,12 +32,16 @@ export const Scene = forwardRef((props, ref) => {
         antialias: true,
         alpha: true,
       });
+      renderer.outputColorSpace = THREE.SRGBColorSpace; 
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.1;
+      renderer.toneMappingExposure = 0.0005;
+           
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.useLegacyLights = false; 
+        renderer.physicallyCorrectLights = true;
 
       container.appendChild(renderer.domElement);
 
@@ -55,42 +59,51 @@ export const Scene = forwardRef((props, ref) => {
       let frameId;
       let cancelled = false;
 
-      // --- Load Unified Final GLB Model with Camera + Lights baked in ---
-      loader.load("/models/final2.glb", (gltf) => {
-        // Guard against React StrictMode double-invoking this effect in
-        // development, which would otherwise load the model twice and
-        // stack duplicate lights/meshes into the scene (causing the
-        // overexposed/white look even after intensity scaling).
+      loader.load("/models/afterrain.glb", (gltf) => {
+       
         if (cancelled) return;
 
         scene.add(gltf.scene);
+        scene.add(new THREE.HemisphereLight(0xffffff, 0x222233, 0.3)); 
 
         const mars = gltf.scene.getObjectByName("Mars");
 
-        // Optional: enable shadow casting/receiving on meshes,
-        // since Blender export doesn't always set this per-object.
-        gltf.scene.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-          if (child.isLight) {
-            child.castShadow = true;
-            console.log(
-              "Light loaded:",
-              child.type,
-              "raw intensity:",
-              child.intensity
-            );
+        
+       gltf.scene.traverse((child) => {
+  if (child.isMesh) {
+    // child.castShadow = true;
+    // child.receiveShadow = true;
 
-            if (child.type === "DirectionalLight") {
-           
-              child.intensity = 5;
-            } else {
-              child.intensity *= 1;
-            }
-          }
-        });
+    // ADD THIS BLOCK
+    if (child.material) {
+      const materials = Array.isArray(child.material)
+        ? child.material
+        : [child.material];
+
+      materials.forEach((mat) => {
+        if (mat.map) {
+          mat.map.colorSpace = THREE.SRGBColorSpace;
+          mat.map.needsUpdate = true;
+        }
+      });
+    }
+  }
+  if (child.isLight) {
+    child.castShadow = true;
+    console.log(
+      "Light loaded:",
+      child.type,
+      "raw intensity:",
+      child.intensity
+    );
+
+    if (child.type === "DirectionalLight") {
+      // child.intensity = 1;
+    } else {
+      // child.intensity *= 1;
+    }
+  }
+});
 
       
 
@@ -115,7 +128,9 @@ export const Scene = forwardRef((props, ref) => {
         const animate = () => {
           frameId = requestAnimationFrame(animate);
           if (mars) {
-            mars.rotation.y += 0.007;
+              mars.rotation.z = THREE.MathUtils.degToRad(10);
+
+            mars.rotation.y += 0.0007;
           }
           renderer.render(scene, camera);
         };
@@ -163,9 +178,9 @@ export const Scene = forwardRef((props, ref) => {
 
 const Footer = () => {
   return (
-   <div className="relative w-full h-screen overflow-hidden">
+   <div className="relative w-full h-screen overflow-hidden ">
       {/* 3D Scene locked to the background */}
-      <Scene className="absolute inset-0 w-full h-full z-0 pointer-events-none" />
+      <Scene className="absolute inset-0 w-full h-full z-12 pointer-events-none " />
 
       {/* Content wrapper using absolute positioning with precise placement */}
       <div className="absolute top-[48%] left-10 z-10 w-full h-full p-6 px-50  backdrop-blur-md rounded-lg text-[#DCCCBC]">
