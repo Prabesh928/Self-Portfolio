@@ -59,7 +59,7 @@ export const Scene = forwardRef((props, ref) => {
       let frameId;
       let cancelled = false;
 
-      loader.load("/models/afterrain3.glb", (gltf) => {
+      loader.load("/models/afterrain4.glb", (gltf) => {
        
         if (cancelled) return;
 
@@ -183,12 +183,12 @@ const Footer = () => {
       <Scene className="absolute inset-0 w-full h-full z-12 pointer-events-none " />
 
       {/* Content wrapper using absolute positioning with precise placement */}
-      <div className="absolute top-[48%] left-10 z-10 w-full h-full p-6 px-50  backdrop-blur-md rounded-lg text-[#DCCCBC]">
+      <div className="absolute top-[48%] left-10 z-10 w-full h-full p-6 px-50  backdrop-blur-md rounded-lg text-[#6d6754]">
        <div className="h-full w-full flex flex-col">
         <div className="h-[18%]  text-2xl w-full font-semibold">
           <p>Currently exploring new opportunities   <br/>to grow in full-stack engineering.</p>
         </div>
-        <div className="bg-[#DCCCBC] h-[0.3%] w-full"></div>
+        <div className="bg-[#6d6754] h-[0.3%] w-full"></div>
         <div className="h-[60%] mt-15  flex justify-around items-center gap-13">
           <div className="first w-[15%] h-full ">
             <div className="flex h-full w-full flex-col gap-2">
