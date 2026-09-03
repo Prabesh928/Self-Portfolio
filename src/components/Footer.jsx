@@ -59,7 +59,7 @@ export const Scene = forwardRef((props, ref) => {
       let frameId;
       let cancelled = false;
 
-      loader.load("/models/afterrain.glb", (gltf) => {
+      loader.load("/models/afterrain2.glb", (gltf) => {
        
         if (cancelled) return;
 
