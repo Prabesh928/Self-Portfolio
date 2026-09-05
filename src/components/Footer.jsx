@@ -22,12 +22,8 @@ export const Scene = forwardRef((props, ref) => {
       const container = containerRef.current;
       if (!container) return;
 
-      // --- Scene ---
       const scene = new THREE.Scene();
 
-     
-
-      // --- Renderer ---
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
         alpha: true,
@@ -45,8 +41,6 @@ export const Scene = forwardRef((props, ref) => {
 
       container.appendChild(renderer.domElement);
 
-    
-      // --- Loaders ---
       const dracoLoader = new DRACOLoader();
       dracoLoader.setDecoderPath(
         "https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
@@ -58,8 +52,11 @@ export const Scene = forwardRef((props, ref) => {
       let camera;
       let frameId;
       let cancelled = false;
+      let mixer;
+      let scrollTriggerInstance;
+      const clock = new THREE.Clock();
 
-      loader.load("/models/afterrain7.glb", (gltf) => {
+      loader.load("/models/finalgit.glb", (gltf) => {
        
         if (cancelled) return;
 
@@ -67,8 +64,25 @@ export const Scene = forwardRef((props, ref) => {
         scene.add(new THREE.HemisphereLight(0xffffff, 0x222233, 0.3)); 
 
         const mars = gltf.scene.getObjectByName("Mars");
+        gltf.animations.forEach((clip) => console.log(clip.name));
 
-        
+        if (gltf.animations && gltf.animations.length > 0) {
+          mixer = new THREE.AnimationMixer(gltf.scene);gltf.animations.forEach((clip) => {
+  const action = mixer.clipAction(clip);
+  action.setLoop(THREE.LoopRepeat, Infinity);
+  if (clip.name === "Sketchfab_model.002Action") {
+    action.timeScale = 1.5;
+  } else {
+    action.timeScale = 20;
+  }
+  action.play();
+});
+          mixer.timeScale = 0.2;
+          gltf.animations.forEach((clip) => {
+            mixer.clipAction(clip).setLoop(THREE.LoopRepeat, Infinity).play();
+          });
+        }
+
        gltf.scene.traverse((child) => {
   if (child.isMesh) {
     // child.castShadow = true;
@@ -124,9 +138,10 @@ export const Scene = forwardRef((props, ref) => {
           camera.lookAt(0, 0, 0);
         }
 
-        // --- Animation Loop ---
         const animate = () => {
           frameId = requestAnimationFrame(animate);
+          const delta = clock.getDelta();
+          if (mixer) mixer.update(delta);
           if (mars) {
               mars.rotation.z = THREE.MathUtils.degToRad(10);
 
@@ -136,10 +151,39 @@ export const Scene = forwardRef((props, ref) => {
         };
         animate();
 
+        scrollTriggerInstance = ScrollTrigger.create({
+          trigger: container,
+          start: "top bottom",
+          end: "bottom top",
+          onEnter: () => {
+            if (!frameId) {
+              clock.getDelta();
+              animate();
+            }
+          },
+          onEnterBack: () => {
+            if (!frameId) {
+              clock.getDelta();
+              animate();
+            }
+          },
+          onLeave: () => {
+            if (frameId) {
+              cancelAnimationFrame(frameId);
+              frameId = null;
+            }
+          },
+          onLeaveBack: () => {
+            if (frameId) {
+              cancelAnimationFrame(frameId);
+              frameId = null;
+            }
+          },
+        });
+
         setIsReady(true);
       });
 
-      // --- Resize Handler ---
       const handleResize = () => {
         if (!container || !camera) return;
         camera.aspect = container.clientWidth / container.clientHeight;
@@ -152,6 +196,7 @@ export const Scene = forwardRef((props, ref) => {
         cancelled = true;
         window.removeEventListener("resize", handleResize);
         if (frameId) cancelAnimationFrame(frameId);
+        if (scrollTriggerInstance) scrollTriggerInstance.kill();
         renderer.dispose();
         dracoLoader.dispose();
         if (container && container.contains(renderer.domElement)) {
@@ -179,10 +224,8 @@ export const Scene = forwardRef((props, ref) => {
 const Footer = () => {
   return (
    <div className="relative w-full h-screen overflow-hidden ">
-      {/* 3D Scene locked to the background */}
       <Scene className="absolute inset-0 w-full h-full z-12 pointer-events-none " />
 
-      {/* Content wrapper using absolute positioning with precise placement */}
       <div className="absolute top-[48%] left-10 z-10 w-full h-full p-6 px-50  backdrop-blur-md rounded-lg text-[#6d6754]">
        <div className="h-full w-full flex flex-col">
         <div className="h-[18%]  text-2xl w-full font-semibold">
