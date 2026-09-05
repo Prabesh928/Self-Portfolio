@@ -10,6 +10,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import planeSoundUrl from "../assets/sounds/planesound.mp3";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,9 +55,11 @@ export const Scene = forwardRef((props, ref) => {
       let cancelled = false;
       let mixer;
       let scrollTriggerInstance;
+      let listener;
+      let sound;
       const clock = new THREE.Clock();
 
-      loader.load("/models/finalgit.glb", (gltf) => {
+      loader.load("/models/finalmodel.glb", (gltf) => {
        
         if (cancelled) return;
 
@@ -72,8 +75,12 @@ export const Scene = forwardRef((props, ref) => {
   action.setLoop(THREE.LoopRepeat, Infinity);
   if (clip.name === "Sketchfab_model.002Action") {
     action.timeScale = 1.5;
-  } else {
-    action.timeScale = 20;
+  }
+  else if (clip.name === "Sketchfab_modelAction") {
+    action.timeScale = 1.5;
+  }
+  else {
+    action.timeScale = 10;
   }
   action.play();
 });
@@ -88,7 +95,7 @@ export const Scene = forwardRef((props, ref) => {
     // child.castShadow = true;
     // child.receiveShadow = true;
 
-    // ADD THIS BLOCK
+    
     if (child.material) {
       const materials = Array.isArray(child.material)
         ? child.material
@@ -138,6 +145,14 @@ export const Scene = forwardRef((props, ref) => {
           camera.lookAt(0, 0, 0);
         }
 
+        listener = new THREE.AudioListener();
+        camera.add(listener);
+        sound = new THREE.PositionalAudio(listener);
+        const planeObject = gltf.scene.getObjectByName("bigplane");
+        const audioLoader = new THREE.AudioLoader();
+        let soundLoaded = false;
+        if (planeObject) planeObject.add(sound);
+
         const animate = () => {
           frameId = requestAnimationFrame(animate);
           const delta = clock.getDelta();
@@ -160,11 +175,37 @@ export const Scene = forwardRef((props, ref) => {
               clock.getDelta();
               animate();
             }
+            if (!soundLoaded) {
+              soundLoaded = true;
+              audioLoader.load(planeSoundUrl, (buffer) => {
+                sound.setBuffer(buffer);
+                sound.setLoop(true);
+                sound.setRefDistance(2);
+                sound.setRolloffFactor(2);
+                sound.setDistanceModel("exponential");
+                sound.play();
+              });
+            } else if (sound && sound.buffer && !sound.isPlaying) {
+              sound.play();
+            }
           },
           onEnterBack: () => {
             if (!frameId) {
               clock.getDelta();
               animate();
+            }
+            if (!soundLoaded) {
+              soundLoaded = true;
+              audioLoader.load(planeSoundUrl, (buffer) => {
+                sound.setBuffer(buffer);
+                sound.setLoop(true);
+                sound.setRefDistance(2);
+                sound.setRolloffFactor(2);
+                sound.setDistanceModel("exponential");
+                sound.play();
+              });
+            } else if (sound && sound.buffer && !sound.isPlaying) {
+              sound.play();
             }
           },
           onLeave: () => {
@@ -172,12 +213,14 @@ export const Scene = forwardRef((props, ref) => {
               cancelAnimationFrame(frameId);
               frameId = null;
             }
+            if (sound && sound.isPlaying) sound.pause();
           },
           onLeaveBack: () => {
             if (frameId) {
               cancelAnimationFrame(frameId);
               frameId = null;
             }
+            if (sound && sound.isPlaying) sound.pause();
           },
         });
 
