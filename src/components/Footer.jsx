@@ -10,7 +10,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import planeSoundUrl from "../assets/sounds/planesound.mp3";
+import planeSoundUrl from "../assets/sounds/finalsound.mp3";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -66,17 +66,17 @@ export const Scene = forwardRef((props, ref) => {
         scene.add(gltf.scene);
         scene.add(new THREE.HemisphereLight(0xffffff, 0x222233, 0.3)); 
 
-        const mars = gltf.scene.getObjectByName("Mars");
+        const mars = gltf.scene.getObjectByName("star");
         gltf.animations.forEach((clip) => console.log(clip.name));
 
         if (gltf.animations && gltf.animations.length > 0) {
           mixer = new THREE.AnimationMixer(gltf.scene);gltf.animations.forEach((clip) => {
   const action = mixer.clipAction(clip);
   action.setLoop(THREE.LoopRepeat, Infinity);
-  if (clip.name === "Sketchfab_model.002Action") {
+  if (clip.name === "Sketchfab_modelAction") {
     action.timeScale = 1.5;
   }
-  else if (clip.name === "Sketchfab_modelAction") {
+  else if (clip.name === "Sketchfab_model.002Action") {
     action.timeScale = 1.5;
   }
   else {
@@ -148,7 +148,7 @@ export const Scene = forwardRef((props, ref) => {
         listener = new THREE.AudioListener();
         camera.add(listener);
         sound = new THREE.PositionalAudio(listener);
-        const planeObject = gltf.scene.getObjectByName("bigplane");
+        const planeObject = gltf.scene.getObjectByName("Sketchfab_model");
         const audioLoader = new THREE.AudioLoader();
         let soundLoaded = false;
         if (planeObject) planeObject.add(sound);
@@ -180,13 +180,14 @@ export const Scene = forwardRef((props, ref) => {
               audioLoader.load(planeSoundUrl, (buffer) => {
                 sound.setBuffer(buffer);
                 sound.setLoop(true);
+                sound.setVolume(2.5);
                 sound.setRefDistance(2);
-                sound.setRolloffFactor(2);
+                sound.setRolloffFactor(1);
                 sound.setDistanceModel("exponential");
                 sound.play();
               });
-            } else if (sound && sound.buffer && !sound.isPlaying) {
-              sound.play();
+            } else {
+              if (sound && sound.buffer && !sound.isPlaying) sound.play();
             }
           },
           onEnterBack: () => {
@@ -199,13 +200,14 @@ export const Scene = forwardRef((props, ref) => {
               audioLoader.load(planeSoundUrl, (buffer) => {
                 sound.setBuffer(buffer);
                 sound.setLoop(true);
+                sound.setVolume(2.5);
                 sound.setRefDistance(2);
-                sound.setRolloffFactor(2);
+                sound.setRolloffFactor(1);
                 sound.setDistanceModel("exponential");
                 sound.play();
               });
-            } else if (sound && sound.buffer && !sound.isPlaying) {
-              sound.play();
+            } else {
+              if (sound && sound.buffer && !sound.isPlaying) sound.play();
             }
           },
           onLeave: () => {
