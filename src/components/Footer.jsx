@@ -59,7 +59,7 @@ export const Scene = forwardRef((props, ref) => {
       let sound;
       const clock = new THREE.Clock();
 
-      loader.load("/models/finalmodel.glb", (gltf) => {
+      loader.load("/models/solar.glb", (gltf) => {
        
         if (cancelled) return;
 
@@ -74,13 +74,13 @@ export const Scene = forwardRef((props, ref) => {
   const action = mixer.clipAction(clip);
   action.setLoop(THREE.LoopRepeat, Infinity);
   if (clip.name === "Sketchfab_modelAction") {
-    action.timeScale = 1.5;
+    action.timeScale = 0.5;
   }
   else if (clip.name === "Sketchfab_model.002Action") {
-    action.timeScale = 1.5;
+    action.timeScale = 1;
   }
   else {
-    action.timeScale = 10;
+    action.timeScale = 1.5;
   }
   action.play();
 });
