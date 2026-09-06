@@ -33,7 +33,7 @@ export const Scene = forwardRef((props, ref) => {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 0.0006;
+      renderer.toneMappingExposure = 0.0005;
            
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -165,7 +165,7 @@ export const Scene = forwardRef((props, ref) => {
           if (mars) {
               mars.rotation.z = THREE.MathUtils.degToRad(10);
 
-            mars.rotation.y += 0.008;
+            mars.rotation.y += 0.007;
           }
           renderer.render(scene, camera);
         };
