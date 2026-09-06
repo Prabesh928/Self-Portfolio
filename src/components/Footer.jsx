@@ -33,7 +33,7 @@ export const Scene = forwardRef((props, ref) => {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 0.0005;
+      renderer.toneMappingExposure = 0.0006;
            
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -66,7 +66,7 @@ export const Scene = forwardRef((props, ref) => {
         scene.add(gltf.scene);
         scene.add(new THREE.HemisphereLight(0xffffff, 0x222233, 0.3)); 
 
-        const mars = gltf.scene.getObjectByName("star");
+        const mars = gltf.scene.getObjectByName("Mars");
         gltf.animations.forEach((clip) => console.log(clip.name));
 
         if (gltf.animations && gltf.animations.length > 0) {
@@ -126,6 +126,11 @@ export const Scene = forwardRef((props, ref) => {
   }
 });
 
+//for future
+// gltf.scene.traverse((child) => {
+//   console.log(child.name, "-", child.type);
+// });
+
       
 
        
@@ -160,7 +165,7 @@ export const Scene = forwardRef((props, ref) => {
           if (mars) {
               mars.rotation.z = THREE.MathUtils.degToRad(10);
 
-            mars.rotation.y += 0.0007;
+            mars.rotation.y += 0.008;
           }
           renderer.render(scene, camera);
         };
