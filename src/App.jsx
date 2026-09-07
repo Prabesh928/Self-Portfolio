@@ -3,6 +3,7 @@ import Home from "./Pages/Home";
 import About from "./Pages/About";
 import Contact from "./Pages/Contact";
 import Navbar from "./components/Navbar";
+import Project from "./Pages/Project";
 
 function AppContent() {
   const location = useLocation();
@@ -15,6 +16,7 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/projects" element={<Project />} />
       </Routes>
     </>
   );
