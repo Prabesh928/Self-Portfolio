@@ -1,8 +1,12 @@
 import React from 'react'
+import photo1 from '../assets/'
 
 const About = () => {
   return (
-    <div>About</div>
+    <div className='h-full w-full'>
+        
+        
+    </div>
   )
 }
 
