@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Typewriter from "typewriter-effect";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { NavLink } from "react-router-dom";
 gsap.registerPlugin(ScrollTrigger);
 
 const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
@@ -166,15 +167,29 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
       </div>
 
       {/* NAV LINKS */}
-      <div className="navtwo w-[25%] flex h-[70%]" ref={navLinksRef}>
-        <ul className="flex w-full h-full justify-between items-center">
-          <li className="nav-item">Home</li>
-          <li className="nav-item">About</li>
-          <li className="nav-item">Projects</li>
-          <li className="nav-item">Skills</li>
-          <li className="nav-item">Contact</li>
-        </ul>
-      </div>
+   <div className="navtwo w-[25%] flex h-[70%]" ref={navLinksRef}>
+  <ul className="flex w-full h-full justify-between items-center">
+    <li className="nav-item">
+      <NavLink to="/">Home</NavLink>
+    </li>
+
+    <li className="nav-item">
+      <NavLink to="/about">About</NavLink>
+    </li>
+
+    <li className="nav-item">
+      <NavLink to="/projects">Projects</NavLink>
+    </li>
+
+    <li className="nav-item">
+      <NavLink to="/skills">Skills</NavLink>
+    </li>
+
+    <li className="nav-item">
+      <NavLink to="/contact">Contact</NavLink>
+    </li>
+  </ul>
+</div>
 
       {/* MENU AFTER SCROLL */}
       <div
