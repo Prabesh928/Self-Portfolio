@@ -12,6 +12,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import planeSoundUrl from "../assets/sounds/finalsound.mp3";
 
+
+
 gsap.registerPlugin(ScrollTrigger);
 
 export const Scene = forwardRef((props, ref) => {
@@ -80,7 +82,7 @@ export const Scene = forwardRef((props, ref) => {
     action.timeScale = 1;
   }
   else {
-    action.timeScale = 1.5;
+    action.timeScale =2;
   }
   action.play();
 });

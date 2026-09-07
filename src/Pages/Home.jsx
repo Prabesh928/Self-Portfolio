@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import Startpage from "./Startpage";
 import Landingpage from "./Landingpage";
@@ -15,8 +16,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.defaults({ pinType: "transform" }); 
 
-
-function Home() {
+const Home = () => {
   const cursor = useRef(null);
   const landing = useRef(null);
   const lenisRef = useRef(null); 
@@ -79,7 +79,7 @@ useEffect(() => {
   const tl = gsap.timeline();
 
   if (menuopen) {
-    // Entrance
+    // --- ANIMATE IN (Entrance) ---
     tl.set(element, { autoAlpha: 1 }); 
     
     // 1. Panel Drops Down
@@ -95,7 +95,7 @@ useEffect(() => {
       "-=1" 
     );
 
-   
+    // 3. TEXT ANIMATION (Opposite Swipe - Dropping from TOP)
     tl.fromTo(paragraphs,
       { 
         y: -40,      // Start 40px HIGHER
@@ -112,8 +112,8 @@ useEffect(() => {
     );
 
   } else {
-    // Exit
-   
+    // --- ANIMATE OUT (Exit) ---
+    // Keep your exit swipe as it was (dropping down and out)
     tl.to([photo, paragraphs], {
       y: 30,
       opacity: 0,
@@ -203,4 +203,4 @@ useEffect(() => {
   );
 }
 
-export default Home;
+export default Home
