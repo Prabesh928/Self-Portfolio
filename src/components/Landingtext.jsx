@@ -52,6 +52,8 @@ const Landingtext = forwardRef((props, ref) => {
     play: () => tlRef.current?.play(),
     pause: () => tlRef.current?.pause(),
     restart: () => tlRef.current?.restart(),
+     complete: () => tlRef.current?.progress(1),
+  isReady: () => !!tlRef.current,
   }));
 
   return (

@@ -175,7 +175,7 @@ const Stackingdiv = () => {
 
   return (
     <div
-      className="h-[110vh] w-full relative flex justify-center items-center"
+      className="h-[110vh] bg-white w-full relative flex justify-center items-center"
       ref={secondcontainer}
     >
       <div className="foricons absolute top-5 w-full h-[10%] flex justify-center items-center gap-25">

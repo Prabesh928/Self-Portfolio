@@ -14,16 +14,40 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
  
   useEffect(() => {
     if (!landing.current) return;
+if (intro) {
+  document.body.style.cursor = "auto";
+  document.body.classList.remove("loading");
 
-    if (intro) {
-      document.body.style.cursor = "auto";
-      document.body.classList.remove("loading");
-      gsap.set(landing.current, { y: 0, alpha: 1 });
-      const sceneEl = landing.current.querySelector(".scene");
-      if (sceneEl) gsap.set(sceneEl, { y: 0, opacity: 1 });
+  let checkReady = setInterval(() => {
+    const scene = sceneRef.current;
+    const text = textRef.current;
+    if (!scene || !text) return;
+
+    if (
+      scene.isReady() &&
+      scene.cameraMove() &&
+      scene.laptopOpen() &&
+      text.isReady()
+    ) {
+      clearInterval(checkReady);
+
+      const cameraTl = scene.cameraMove();
+      const laptopTl = scene.laptopOpen();
+      const keyLightsTl = scene.keyLightsOn();
+      const laptopBackTl = scene.laptopBack();
+
+      if (cameraTl) cameraTl.progress(1);
+      if (laptopTl) laptopTl.progress(1);
+      if (keyLightsTl) keyLightsTl.progress(1);
+      if (laptopBackTl) laptopBackTl.progress(1);
+
       if (navbarRef?.current) navbarRef.current.startAnimation();
-      return;
+      text.complete();
     }
+  }, 100);
+
+  return () => clearInterval(checkReady);
+}
 
     
     document.body.style.cursor = "none";

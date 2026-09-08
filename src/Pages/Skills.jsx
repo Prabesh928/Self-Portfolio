@@ -99,7 +99,7 @@ const Skills = () => {
  
 
   return (
-    <div className=" text-black h-[280vh]" ref={container}>
+    <div className="bg-white relative z-10 text-black h-[280vh]" ref={container}>
       {/* Upper Section */}
       <div className=" w-full p-10 md:p-25 flex flex-col h-[200vh]   ">
 
