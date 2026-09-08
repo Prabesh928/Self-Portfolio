@@ -4,9 +4,13 @@ import About from "./Pages/About";
 import Contact from "./Pages/Contact";
 import Navbar from "./components/Navbar";
 import Project from "./Pages/Project";
+import { useState } from "react";
 
 function AppContent() {
+
   const location = useLocation();
+  
+  const [introPlayed, setIntroPlayed] = useState(false);
   const themeMap = {
     "/about": "light",
     "/contact": "light",
@@ -17,11 +21,11 @@ function AppContent() {
 
   return (
     <>
-      {location.pathname !== "/" && <Navbar theme={theme} />}
+      {location.pathname !== "/" && <Navbar theme={theme}  />}
       
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home introPlayed={introPlayed} setIntroPlayed={setIntroPlayed} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/projects" element={<Project />} />

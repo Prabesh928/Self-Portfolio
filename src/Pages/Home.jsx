@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import Startpage from "./Startpage";
 import Landingpage from "./Landingpage";
@@ -17,13 +16,16 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.defaults({ pinType: "transform" }); 
 
-const Home = () => {
+const Home = ({introPlayed, setIntroPlayed}) => {
+
+  const [hasStarted, setHasStarted] = useState(introPlayed);
+
+  
   const cursor = useRef(null);
   const landing = useRef(null);
   const lenisRef = useRef(null); 
     const navbarRef = useRef(null);
-    const [hasStarted, setHasStarted] = useState(false);
-    const [intro , setintro ] =useState(false);
+    
     const [menuopen, setmenuopen]=useState(false);
     const menuRef = useRef(null)
 
@@ -41,7 +43,7 @@ const Home = () => {
 
     //for cursor 
     useEffect(() => {
-  if (!intro) return;
+  if (!introPlayed) return;
   const cursorEl = cursor.current;
   if (!cursorEl) return;
 
@@ -62,7 +64,7 @@ const Home = () => {
   }, cursorEl);
 
   return () => ctx.revert();
-}, [intro]);
+}, [introPlayed]);
 
 
 
@@ -140,7 +142,7 @@ useEffect(() => {
 
 //for lenis scroll
 useEffect(() => {
-  if (!intro) return;
+  if (!introPlayed) return;
   if (!lenisRef.current) {
     lenisRef.current = new Lenis({ duration: 1.6, smooth: true, smoothTouch: false, easing: t => 1 - Math.pow(1 - t, 2.5) });
   }
@@ -159,7 +161,7 @@ useEffect(() => {
     lenisRef.current?.destroy();
     lenisRef.current = null;
   };
-}, [intro]);
+}, [introPlayed]);
 
 
 
@@ -184,12 +186,12 @@ useEffect(() => {
     h-14 w-14 rounded-full
     flex items-center justify-center
     transition-opacity duration-500
-    ${intro ? "opacity-100" : "opacity-0"}`}
+    ${introPlayed ? "opacity-100" : "opacity-0"}`}
       >
         <p>Scroll</p>
       </div>
 
-      <Landingpage ref={landing} navbarRef={navbarRef} intro={intro} setintro={setintro} />
+      <Landingpage ref={landing} navbarRef={navbarRef} intro={introPlayed} setintro={setIntroPlayed} />
     
       <Skills />
       <Stackingdiv/>

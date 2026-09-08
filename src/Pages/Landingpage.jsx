@@ -11,11 +11,21 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
   const sceneRef = useRef(null);
   const textRef = useRef(null);
 
-  // --- Master timeline for landing intro ---
+ 
   useEffect(() => {
     if (!landing.current) return;
 
-    // 1️ Hide cursor immediately on mount
+    if (intro) {
+      document.body.style.cursor = "auto";
+      document.body.classList.remove("loading");
+      gsap.set(landing.current, { y: 0, alpha: 1 });
+      const sceneEl = landing.current.querySelector(".scene");
+      if (sceneEl) gsap.set(sceneEl, { y: 0, opacity: 1 });
+      if (navbarRef?.current) navbarRef.current.startAnimation();
+      return;
+    }
+
+    
     document.body.style.cursor = "none";
     document.body.classList.add("loading");
 
@@ -89,7 +99,7 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
       document.body.style.cursor = "auto";
       ctx.revert();
     };
-  }, [landing, navbarRef, setintro]);
+  }, [landing, navbarRef, setintro, intro]);
 
   // --- Laptop rotation linked to scroll ---
   useEffect(() => {
