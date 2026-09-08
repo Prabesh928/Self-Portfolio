@@ -1,13 +1,99 @@
-import React from 'react'
-import photo1 from '../assets/me.jpg'
+import React, { useEffect, useRef } from 'react'
+import photo1 from '../assets/one.jpg'
+import { gsap } from 'gsap'
+
+
+
 
 const About = () => {
-  return (
-    <div className='h-[100vh] w-[100vw] bg-black'>
 
-        <div className='h-[40%] w-[25%] absolute left-20 top-50'>
-            <img src={photo1} />
-            <h1>okey</h1>
+
+  
+  const movingref = useRef(null);
+useEffect(() => {
+  gsap.to(movingref.current, {
+    xPercent: -50,
+    duration: 80,
+    repeat: -1,
+    ease: "none"
+  });
+}, []);
+
+
+
+  return (
+    <div className='h-[100vh] w-[100vw]  flex justify-center items-end '>
+
+     
+      <div
+  ref={movingref}
+  className="absolute h-[25%] top-50 flex font-bold text-8xl items-center w-max"
+>
+  <div className="flex">
+    <h1>CREATIVE DEVELOPER</h1>
+    <h1>•</h1>
+    <h1>WEB EXPERIENCES</h1>
+    <h1>•</h1>
+    <h1>FULL STACK</h1>
+    <h1>•</h1>
+    <h1>3D EXPERIENCES</h1>
+    <h1>•</h1>
+    <h1>CREATIVE CODING</h1>
+    <h1>•</h1>
+    <h1>GSAP ANIMATIONS</h1>
+    <h1>•</h1>
+    <h1>THREE.JS</h1>
+    <h1>•</h1>
+    <h1>BUILDING IDEAS</h1>
+  </div>
+
+  <div className="flex">
+    <h1>CREATIVE DEVELOPER</h1>
+    <h1>•</h1>
+    <h1>WEB EXPERIENCES</h1>
+    <h1>•</h1>
+    <h1>FULL STACK</h1>
+    <h1>•</h1>
+    <h1>3D EXPERIENCES</h1>
+    <h1>•</h1>
+    <h1>CREATIVE CODING</h1>
+    <h1>•</h1>
+    <h1>GSAP ANIMATIONS</h1>
+    <h1>•</h1>
+    <h1>THREE.JS</h1>
+    <h1>•</h1>
+    <h1>BUILDING IDEAS</h1>
+  </div>
+</div>
+
+        <div className='h-[30%] w-[85%]  mb-12 flex justify-between'>
+          <div className="first h-full w-[30%]  flex flex-col justify-between">
+            <div className='w-full h-[20%] -400 text-sm'>
+              I'm a self-taught developer who likes turning ideas into things people can actually click, scroll, and enjoy. This is a bit about how I got here
+            </div>
+            <div className='w-full h-[35%]  '>
+              <p className=' underline '>prabeshgyawali928@gmail.com</p>
+            </div>
+          </div>
+          <div className="second h-full w-[25%]  flex flex-col justify-between">
+            <div className='w-full h-[75%]  flex justify-center items-baseline-last '>
+              <p>
+                2+ years coding <br/>
+               15+ projects built <br/>
+               Based in [your city]
+              </p>
+            </div>
+            <div className='w-full h-[10%]   flex justify-center'>
+              <p>See my work →</p>
+            </div>
+          </div>
+
+          <div className=' absolute h-[85%] w-[27%] top-12 left-1/2 -translate-x-1/2 ml-20'>
+          <img src={photo1} className='w-full h-full object-cover' />
+           </div>
+          
+           
+           
 
             
         </div>

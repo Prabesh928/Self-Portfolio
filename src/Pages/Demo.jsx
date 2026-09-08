@@ -138,10 +138,8 @@ camera.lookAt(0, 0, 0);
     <div ref={blueRef} className="h-[100vh] w-full bg-blue-600 flex">
       <div className="bookleft bg-green-900 w-1/2 flex items-center">
         <p className="p-12 text-white">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora,
-          cumque dicta incidunt dolorum reprehenderit quas cupiditate fuga
-          expedita, laudantium qui corporis voluptates quaerat iste. Eveniet
-          ad illum cumque, magnam modi similique necessitatibus exercitationem.
+          this is only for the deom purpose only for the first time. A computer is an electronic devie that is capable of handling the input to give the meaning ful result calle doutput . 
+          
         </p>
       </div>
       <div

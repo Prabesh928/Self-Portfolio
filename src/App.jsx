@@ -11,6 +11,7 @@ function AppContent() {
   return (
     <>
       {location.pathname !== "/" && <Navbar />}
+      
 
       <Routes>
         <Route path="/" element={<Home />} />
