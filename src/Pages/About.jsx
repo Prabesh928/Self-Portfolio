@@ -22,12 +22,12 @@ useEffect(() => {
 
 
   return (
-    <div className='h-[100vh] w-[100vw]  flex justify-center items-end '>
+    <div className='h-[100vh] w-full  flex justify-center items-end overflow-hidden '>
 
      
       <div
   ref={movingref}
-  className="absolute h-[25%] top-50 flex font-bold text-8xl items-center w-max"
+  className="absolute h-[25%] top-50 flex font-bold text-8xl items-center  w-max"
 >
   <div className="flex">
     <h1>CREATIVE DEVELOPER</h1>
@@ -66,10 +66,10 @@ useEffect(() => {
   </div>
 </div>
 
-        <div className='h-[30%] w-[85%]  mb-12 flex justify-between'>
+        <div className='h-[30%] w-[85%]  mb-12 flex justify-between text-[#0d0e13]'>
           <div className="first h-full w-[30%]  flex flex-col justify-between">
-            <div className='w-full h-[20%] -400 text-sm'>
-              I'm a self-taught developer who likes turning ideas into things people can actually click, scroll, and enjoy. This is a bit about how I got here
+            <div className='w-full h-[20%] -400 text-sm '>
+              I'm a self-taught developer who likes turning ideas into things people can actually click, scroll, and enjoy. This is <br/> — a bit about how I got here
             </div>
             <div className='w-full h-[35%]  '>
               <p className=' underline '>prabeshgyawali928@gmail.com</p>
@@ -78,9 +78,9 @@ useEffect(() => {
           <div className="second h-full w-[25%]  flex flex-col justify-between">
             <div className='w-full h-[75%]  flex justify-center items-baseline-last '>
               <p>
-                2+ years coding <br/>
-               15+ projects built <br/>
-               Based in [your city]
+                4+ years coding <br/>
+               Unlimited projects built <br/>
+               Toronto,Canada
               </p>
             </div>
             <div className='w-full h-[10%]   flex justify-center'>

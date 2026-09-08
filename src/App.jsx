@@ -7,10 +7,17 @@ import Project from "./Pages/Project";
 
 function AppContent() {
   const location = useLocation();
+  const themeMap = {
+    "/about": "light",
+    "/contact": "light",
+    "/projects": "dark", // adjust to whatever each page's background actually is
+  };
+
+  const theme = themeMap[location.pathname] || "dark";
 
   return (
     <>
-      {location.pathname !== "/" && <Navbar />}
+      {location.pathname !== "/" && <Navbar theme={theme} />}
       
 
       <Routes>

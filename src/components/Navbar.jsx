@@ -6,7 +6,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { NavLink } from "react-router-dom";
 gsap.registerPlugin(ScrollTrigger);
 
-const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
+const Navbar = forwardRef(({ landing, setmenuopen, menuopen,theme = "dark" }, ref) => {
   const navbarRef = useRef(null);
   const tlRef = useRef(null); // store timeline
   const navLinksRef = useRef(null);
@@ -136,11 +136,13 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen }, ref) => {
     setmenuopen((prev) => !prev);
   };
 
+  const baseTextColor = theme === "dark" ? "text-gray-50" : "text-black";
+
   return (
-    <div
-      ref={navbarRef}
-      className={`${menuopen ? "text-black" : "text-gray-50"} fixed top-0 left-0 z-70 flex w-full h-[12vh] justify-between px-12 items-end bg-transparent`}
-    >
+   <div
+  ref={navbarRef}
+  className={`${menuopen ? "text-black" : baseTextColor} fixed top-0 left-0 z-70 flex w-full h-[12vh] justify-between px-12 items-end bg-transparent`}
+>
       {/* LOGO */}
       <div className="navone w-[15%] h-[70%] text-3xl flex flex-col justify-center">
         <div className="relative text-center nav-item logo flex flex-col">

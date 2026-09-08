@@ -13,6 +13,7 @@ import Stackingdiv from "../components/Stackingdiv";
 import Demo from "./Demo"
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.defaults({ pinType: "transform" }); 
 
@@ -79,26 +80,26 @@ useEffect(() => {
   const tl = gsap.timeline();
 
   if (menuopen) {
-    // --- ANIMATE IN (Entrance) ---
+   
     tl.set(element, { autoAlpha: 1 }); 
     
-    // 1. Panel Drops Down
+    
     tl.fromTo(element, 
       { y: "-120%", skewY: 7, transformOrigin: "right top" }, 
       { y: "0%", skewY: 0, duration: 1.5, ease: "expo.out" }
     );
 
-    // 2. Photo drops down into view
+ 
     tl.fromTo(photo,
-      { y: -100, opacity: 0 }, // Changed to negative to drop from TOP
+      { y: -100, opacity: 0 }, 
       { y: 0, opacity: 1, duration: 1, ease: "power4.out" },
       "-=1" 
     );
 
-    // 3. TEXT ANIMATION (Opposite Swipe - Dropping from TOP)
+ 
     tl.fromTo(paragraphs,
       { 
-        y: -40,      // Start 40px HIGHER
+        y: -40,    
         opacity: 0 
       },
       { 
@@ -106,14 +107,13 @@ useEffect(() => {
         opacity: 1, 
         duration: 0.8, 
         ease: "power3.out", 
-        stagger: 0.08 // The "swipe" effect
+        stagger: 0.08
       },
-      "-=0.7" // Overlap with the panel settling
+      "-=0.7" 
     );
 
   } else {
-    // --- ANIMATE OUT (Exit) ---
-    // Keep your exit swipe as it was (dropping down and out)
+   
     tl.to([photo, paragraphs], {
       y: 30,
       opacity: 0,
@@ -176,7 +176,7 @@ useEffect(() => {
   ) : (
     <>
       <Menu ref={menuRef}/>
-      <Navbar landing={landing} ref={navbarRef} menuopen={menuopen} setmenuopen={setmenuopen} className="fixed top-0 left-0  opacity-100 " />
+      <Navbar landing={landing} theme="dark" ref={navbarRef} menuopen={menuopen} setmenuopen={setmenuopen} className="fixed top-0 left-0  opacity-100 " />
       <div
         ref={cursor}
         className={`fixed top-0 left-0 z-100 pointer-events-none
