@@ -3,6 +3,8 @@ import {
   Route,
   useLocation
 } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { gsap } from "gsap";
 
 import Home from "./Home";
 import About from "./About";
@@ -15,8 +17,24 @@ const PageTransition = ({
   introPlayed,
   setIntroPlayed
 }) => {
-
+       
   const location = useLocation();
+  const [oldLocation, setOldLocation] = useState(null);
+  const previousLocation = useRef(location);
+  const oldPageRef = useRef(null);
+const newPageRef = useRef(null);
+
+  useEffect(() => {
+  if (previousLocation.current.pathname !== location.pathname) {
+
+    console.log("OLD:", previousLocation.current.pathname);
+    console.log("NEW:", location.pathname);
+
+    setOldLocation(previousLocation.current);
+
+    previousLocation.current = location;
+  }
+}, [location]);
 
   const themeMap = {
     "/about": "light",
@@ -27,40 +45,79 @@ const PageTransition = ({
   const theme =
     themeMap[location.pathname] || "dark";
 
-  return (
-    <>
-      {location.pathname !== "/" && (
-        <Navbar theme={theme} />
-      )}
+    useEffect(() => {
+  if (!oldLocation) return;
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Home
-              introPlayed={introPlayed}
-              setIntroPlayed={setIntroPlayed}
-            />
-          }
-        />
+  const tl = gsap.timeline({
+    onComplete: () => {
+      setOldLocation(null);
+    }
+  });
 
-        <Route
-          path="/about"
-          element={<About />}
-        />
-
-        <Route
-          path="/contact"
-          element={<Contact />}
-        />
-
-        <Route
-          path="/projects"
-          element={<Project />}
-        />
-      </Routes>
-    </>
+  tl.fromTo(
+    newPageRef.current,
+    {
+      y: "-120%",
+      skewY: 7,
+      transformOrigin: "right top"
+    },
+    {
+      y: "0%",
+      skewY: 0,
+      duration: 1.5,
+      ease: "expo.out"
+    }
   );
+
+  return () => tl.kill();
+
+}, [oldLocation]);
+
+    const AppRoutes = ({ routeLocation }) => (
+  <Routes location={routeLocation}>
+    <Route
+      path="/"
+      element={
+        <Home
+          introPlayed={introPlayed}
+          setIntroPlayed={setIntroPlayed}
+        />
+      }
+    />
+
+    <Route path="/about" element={<About />} />
+    <Route path="/contact" element={<Contact />} />
+    <Route path="/projects" element={<Project />} />
+  </Routes>
+);
+
+return (
+  <div className="relative min-h-screen overflow-hidden">
+
+    {location.pathname !== "/" && (
+      <Navbar theme={theme} />
+    )}
+
+   {/* OLD PAGE */}
+{oldLocation && (
+  <div
+    ref={oldPageRef}
+    className="absolute inset-0 z-10 w-full"
+  >
+    <AppRoutes routeLocation={oldLocation} />
+  </div>
+)}
+
+{/* NEW PAGE */}
+<div
+  ref={newPageRef}
+  className="absolute inset-0 z-20 w-full"
+>
+  <AppRoutes routeLocation={location} />
+</div>
+
+  </div>
+);
 };
 
 export default PageTransition;
