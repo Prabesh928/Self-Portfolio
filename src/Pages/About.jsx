@@ -22,7 +22,7 @@ useEffect(() => {
 
 
   return (
-    <div className='relative h-[100vh] bg-green-900 w-full  flex justify-center items-end overflow-hidden '>
+    <div className='relative h-[100vh] bg-white w-full  flex justify-center items-end overflow-hidden '>
 
       
 
