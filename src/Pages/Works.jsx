@@ -60,7 +60,7 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
   return (
     <div className='bg-white z-10   w-screen h-[325vh] py-40 relative' >
       <div className=' absolute h-[12vh] bg-white z-100 top-0 w-full '></div>
-      <div className="workshows bg-white   h-[215vh] w-full relative flex flex-col gap-12  " ref={worksRef}>
+      <div className="workshows bg-white   h-[225vh] w-full relative flex flex-col gap-12  " ref={worksRef}>
         <div className='first  w-full h-[24%] mt-15 flex   '>
           <div className="movingfirst  h-[60%] w-[28%] ml-50 mt-35 z-50">
             <video 
