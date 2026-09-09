@@ -92,29 +92,39 @@ const newPageRef = useRef(null);
 );
 
 return (
-  <div className="relative min-h-screen overflow-hidden">
+  <div
+    className={
+      oldLocation
+        ? "relative h-screen overflow-hidden"
+        : "relative min-h-screen"
+    }
+  >
 
     {location.pathname !== "/" && (
       <Navbar theme={theme} />
     )}
 
-   {/* OLD PAGE */}
-{oldLocation && (
-  <div
-    ref={oldPageRef}
-    className="absolute inset-0 z-10 w-full"
-  >
-    <AppRoutes routeLocation={oldLocation} />
-  </div>
-)}
+    {/* OLD PAGE */}
+    {oldLocation && (
+      <div
+        ref={oldPageRef}
+        className="absolute inset-0 z-10 w-full"
+      >
+        <AppRoutes routeLocation={oldLocation} />
+      </div>
+    )}
 
-{/* NEW PAGE */}
-<div
-  ref={newPageRef}
-  className="absolute inset-0 z-20 w-full"
->
-  <AppRoutes routeLocation={location} />
-</div>
+    {/* NEW PAGE */}
+    <div
+      ref={newPageRef}
+      className={
+        oldLocation
+          ? "absolute inset-0 z-20 w-full"
+          : "relative z-20 w-full"
+      }
+    >
+      <AppRoutes routeLocation={location} />
+    </div>
 
   </div>
 );
