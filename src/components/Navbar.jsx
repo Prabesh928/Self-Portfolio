@@ -46,7 +46,7 @@ const Navbar = forwardRef(({ landing, setmenuopen, menuopen,theme = "dark" }, re
         tlRef.current.play();
         playedRef.current = true;
       }
-    }, 4000);
+    }, 1000);
 
     return () => {
       clearTimeout(fallback);

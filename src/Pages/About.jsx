@@ -22,12 +22,14 @@ useEffect(() => {
 
 
   return (
-    <div className='h-[100vh] w-full  flex justify-center items-end overflow-hidden '>
+    <div className='relative h-[100vh] w-full  flex justify-center items-end overflow-hidden '>
+
+      
 
      
       <div
   ref={movingref}
-  className="absolute h-[25%] top-50 flex font-bold text-8xl items-center  w-max"
+  className="absolute h-[25%] top-50 flex font-bold text-8xl items-center  w-max "
 >
   <div className="flex">
     <h1>CREATIVE DEVELOPER</h1>

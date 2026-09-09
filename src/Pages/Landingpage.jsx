@@ -41,7 +41,7 @@ if (intro) {
       if (keyLightsTl) keyLightsTl.progress(1);
       if (laptopBackTl) laptopBackTl.progress(1);
 
-      if (navbarRef?.current) navbarRef.current.startAnimation();
+      // if (navbarRef?.current) navbarRef.current.startAnimation();
       text.complete();
     }
   }, 100);
