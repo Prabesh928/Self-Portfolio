@@ -134,9 +134,7 @@ tl.to(".movingfirst",{ xPercent:-45},"sync")
 
 
       
-<div className="moving4 h-[100vh] w-full absolute left-0 bottom-0 z-5 bg-black">
- <Footer/>
-</div>
+
       
     </div>
   )
