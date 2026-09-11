@@ -4,7 +4,8 @@ import { SplitText } from "gsap/SplitText";
 
 gsap.registerPlugin(SplitText);
 
-const Landingtext = forwardRef((props, ref) => {
+// const Landingtext = forwardRef((props, ref) => {
+  const Landingtext = forwardRef(({ onComplete }, ref) => {
   const headingRef = useRef(null);
   const paraRef = useRef(null);
   const tlRef = useRef(null);
@@ -16,7 +17,13 @@ const Landingtext = forwardRef((props, ref) => {
       const splitHeading = new SplitText(headingRef.current, { type: "chars,words" });
       const splitPara = new SplitText(paraRef.current, { type: "words" });
 
-      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+      // const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+
+  const tl = gsap.timeline({
+  paused: true,
+  defaults: { ease: "power3.out" },
+  onComplete: () => onComplete?.(),
+ });
 
       tl.to(headingRef.current, { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", duration: 1 });
 
@@ -52,7 +59,11 @@ const Landingtext = forwardRef((props, ref) => {
     play: () => tlRef.current?.play(),
     pause: () => tlRef.current?.pause(),
     restart: () => tlRef.current?.restart(),
-     complete: () => tlRef.current?.progress(1),
+    //  
+     complete: () => {
+  tlRef.current?.progress(1);
+   onComplete?.();
+  },
   isReady: () => !!tlRef.current,
   }));
 

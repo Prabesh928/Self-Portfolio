@@ -33,6 +33,7 @@ const newPageRef = useRef(null);
     setOldLocation(previousLocation.current);
 
     previousLocation.current = location;
+    window.scrollTo(0, 0);
   }
 }, [location]);
 

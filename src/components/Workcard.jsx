@@ -1,9 +1,9 @@
 import React from 'react'
 
 
-const Workcard = ({tittle, imgpath}) => {
+const Workcard = ({tittle, imgpath , className}) => {
   return (
-          <div className=' h-[100vh] w-[100vw] relative'>
+          <div className={`h-[100vh] w-[100vw]  ${className || ''}`}>
 
            
        <img src={imgpath} className='h-full w-full object-cover' />
@@ -14,7 +14,7 @@ const Workcard = ({tittle, imgpath}) => {
           <p>Feature all projects.</p>
         </div>
        </div>
-       <div className="subimg h-full w-[40%] ">
+       <div className="smallimg subimg h-full w-[40%] ">
          <img src={imgpath} className='h-full w-full object-cover' />
        </div>
         </div>
