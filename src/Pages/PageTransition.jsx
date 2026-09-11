@@ -36,6 +36,7 @@ const PageTransition = ({
       smoothTouch: false,
       easing: t => 1 - Math.pow(1 - t, 2.5)
     });
+    console.log("Lenis initialized", lenis);
 
     lenisRef.current = lenis;
     
@@ -58,7 +59,20 @@ const PageTransition = ({
       lenisRef.current = null;
     };
   }, []);
+ // Resize useEffect
+  useEffect(() => {
 
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+
+  }, []);
 
   
   
