@@ -145,7 +145,7 @@ const Landingpage = forwardRef(({ navbarRef, intro, setintro }, landing) => {
         className="scene fixed   inset-0 bg-[#0b0b0f] z-0 pointer-events-none block"
       />
 
-      <div className="absolute left-100 top-45 -translate-y-1/2 z-20">
+      <div className="absolute left-10 top-45 -translate-y-1/2 z-20">
         {/* <Landingtext ref={textRef} /> */}
           <Landingtext ref={textRef} onComplete={() => setintro(true)} />
       </div>
