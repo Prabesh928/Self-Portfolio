@@ -9,7 +9,7 @@ const Workcard = ({ tittle, imgpath, className }) => {
       {/* Full Background Image */}
       <img
         src={imgpath}
-        className='absolute inset-0 h-full w-full object-cover'
+        className='bigimg absolute inset-0 h-full w-full object-cover'
       />
 
       {/* Center Content */}
@@ -24,10 +24,10 @@ const Workcard = ({ tittle, imgpath, className }) => {
         </div>
 
         {/* Small Image */}
-        <div className="smallimg subimg h-full w-[40%]">
+        <div className="overflow-hidden   subimg h-full w-[40%]">
           <img
             src={imgpath}
-            className='h-full w-full object-cover'
+            className='smallimg h-full w-full object-cover'
           />
         </div>
 

@@ -2,52 +2,155 @@ import React, { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Workcard from "../components/Workcard";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Work1 from "../assets/work1.webp";
 import Work2 from "../assets/contact.jpg";
+import Work3 from "../assets/work3.jpg";
+import Work4 from "../assets/work4.jpg";
+import Work5 from "../assets/work5.jpg";
+import Work6 from "../assets/work6.jpg";
 
-const data1 = "Work Title";
-const data2 = "Web Socket web game";
-
-gsap.registerPlugin(ScrollTrigger);
+const projects = [
+  {
+    id: 1,
+    title: "Portfolio Website",
+    description: "Modern developer showcase",
+    image: Work1,
+  },
+  {
+    id: 2,
+    title: "WebSocket Game",
+    description: "Real time multiplayer",
+    image: Work2,
+  },
+  {
+    id: 3,
+    title: "Task Manager",
+    description: "Simple productivity platform",
+    image: Work3,
+  },
+  {
+    id: 4,
+    title: "E-Commerce Store",
+    description: "Modern online shopping",
+    image: Work4,
+  },
+  {
+    id: 5,
+    title: "Social Platform",
+    description: "Connect and share",
+    image: Work5,
+  },
+  {
+    id: 6,
+    title: "Data Dashboard",
+    description: "Visualize important insights",
+    image: Work6,
+  },
+];
 
 const Project = () => {
   const container = useRef(null);
 
-  const work1Ref = useRef(null);
-  const work2Ref = useRef(null);
+  useGSAP(() => {
+    let currentIndex = 0;
+    let isAnimating = false;
+
+    const handleWheel = (e) => {
+
+      // Ignore scroll up for now
+      if (e.deltaY < 0) return;
+
+      // Don't interrupt animation
+      if (isAnimating) return;
+
+      // Already at last project
+      if (currentIndex >= projects.length - 1) return;
+
+      isAnimating = true;
+
+      const currentWork = container.current.querySelector(
+        `.work-${projects[currentIndex].id}`
+      );
+
+      const bigimg =
+        currentWork.querySelector(".bigimg");
+
+      const smallimg =
+        currentWork.querySelector(".smallimg");
+
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          currentIndex++;
+          isAnimating = false;
+        },
+      });
+
+
+      // Big image goes UP
+     tl.to(bigimg, {
+  yPercent: -100,
+  duration: 1.2,
+  ease: "expo.out",
+}, 0);
+
+      // Small image goes DOWN
+      tl.to(
+        smallimg,
+        {
+          yPercent: 120,
+          duration: 2,
+          ease: "expo.out",
+        },
+        0
+      );
+
+    };
+
+
+    container.current.addEventListener(
+      "wheel",
+      handleWheel
+    );
+
+
+    return () => {
+      container.current?.removeEventListener(
+        "wheel",
+        handleWheel
+      );
+    };
+
+  }, { scope: container });
+
 
   return (
     <div
       ref={container}
-      className="relative h-[200vh] w-full bg-black"
+      className="relative h-screen w-full overflow-hidden bg-black"
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
 
-        {/* Work 1 */}
+      {projects.map((project, index) => (
+
         <div
-          ref={work1Ref}
-          className="absolute inset-0"
+          key={project.id}
+          className={`work-${project.id} absolute inset-0`}
+          style={{
+            zIndex: projects.length - index,
+          }}
         >
+
           <Workcard
-            tittle={data1}
-            imgpath={Work1}
+            tittle={project.title}
+            description={project.description}
+            imgpath={project.image}
           />
+
         </div>
 
-        {/* Work 2 */}
-        <div
-          ref={work2Ref}
-          className="absolute inset-0 opacity-0"
-        >
-          <Workcard
-            tittle={data2}
-            imgpath={Work2}
-          />
-        </div>
+      ))}
 
-      </div>
     </div>
   );
 };
