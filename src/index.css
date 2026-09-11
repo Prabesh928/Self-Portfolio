@@ -1,7 +1,19 @@
+
 @import "tailwindcss";
 
-
 @layer base {
+  html {
+    scroll-behavior: auto;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+  }
+
   body.loading {
     cursor: none;
   }
@@ -11,33 +23,53 @@
   }
 }
 
-/* Fonts (safe) */
-@layer utilities {
-  .font-heading { font-family: 'Bebas Neue', cursive; }
-  .font-fancy { font-family: 'Dancing Script', cursive; }
-  .font-display { font-family: 'Pacifico', cursive; }
-  .font-robot { font-family: 'Plus Jakarta Sans' , sans-serif ;}
-}
-
-body:not(.loading) {
-  cursor: default;
-}
-
 /* REQUIRED FOR LENIS */
-html, body {
-  height: 100%;
+
+html.lenis,
+html.lenis body {
+  height: auto;
 }
 
-/* OPTIONAL: hide scrollbar (SAFE) */
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* OPTIONAL: hide scrollbar */
+
 ::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
 
 html {
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
 }
 
-body.loading {
-  cursor: none;
+/* Fonts */
+
+@layer utilities {
+  .font-heading {
+    font-family: "Bebas Neue", cursive;
+  }
+
+  .font-fancy {
+    font-family: "Dancing Script", cursive;
+  }
+
+  .font-display {
+    font-family: "Pacifico", cursive;
+  }
+
+  .font-robot {
+    font-family: "Plus Jakarta Sans", sans-serif;
+  }
 }
+
