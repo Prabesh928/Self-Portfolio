@@ -56,18 +56,38 @@ const Project = () => {
     let currentIndex = 0;
     let isAnimating = false;
 
+    // =====================================
+    // INITIAL TEXT STATE
+    // =====================================
+
+    projects.forEach((project, index) => {
+      const work = container.current.querySelector(
+        `.work-${project.id}`
+      );
+
+      const text = work.querySelector(".text");
+
+      // Only first text visible initially
+      gsap.set(text, {
+        opacity: index === 0 ? 1 : 0,
+      });
+    });
+
+
     const handleWheel = (e) => {
 
-      // Ignore scroll up for now
       if (e.deltaY < 0) return;
 
-      // Don't interrupt animation
       if (isAnimating) return;
 
-      // Already at last project
       if (currentIndex >= projects.length - 1) return;
 
       isAnimating = true;
+
+
+      // =====================================
+      // CURRENT WORK
+      // =====================================
 
       const currentWork = container.current.querySelector(
         `.work-${projects[currentIndex].id}`
@@ -79,6 +99,21 @@ const Project = () => {
       const smallimg =
         currentWork.querySelector(".smallimg");
 
+      const currentText =
+        currentWork.querySelector(".text");
+
+
+      // =====================================
+      // NEXT WORK
+      // =====================================
+
+      const nextWork = container.current.querySelector(
+        `.work-${projects[currentIndex + 1].id}`
+      );
+
+      const nextText =
+        nextWork.querySelector(".text");
+
 
       const tl = gsap.timeline({
         onComplete: () => {
@@ -88,22 +123,57 @@ const Project = () => {
       });
 
 
-      // Big image goes UP
-     tl.to(bigimg, {
-  yPercent: -100,
-  duration: 1.2,
-  ease: "expo.out",
-}, 0);
+      // BIG IMAGE → UP
+      tl.to(
+        bigimg,
+        {
+          yPercent: -100,
+          duration: 1.2,
+          ease: "expo.out",
+        },
+        0
+      );
 
-      // Small image goes DOWN
+
+      // SMALL IMAGE → DOWN
       tl.to(
         smallimg,
         {
           yPercent: 120,
-          duration: 2,
+          duration: 1.2,
           ease: "expo.out",
         },
         0
+      );
+
+
+      // CURRENT TEXT → OUT
+      tl.to(
+        currentText,
+        {
+          opacity: 0,
+          y: -50,
+          duration: 0.5,
+          ease: "power2.out",
+        },
+        0
+      );
+
+
+      // NEXT TEXT → IN
+      tl.fromTo(
+        nextText,
+        {
+          opacity: 0,
+          y: 50,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power3.out",
+        },
+        0.3
       );
 
     };
