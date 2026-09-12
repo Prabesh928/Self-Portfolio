@@ -1,3 +1,4 @@
+
 import React from "react";
 
 const Workcard = ({ tittle, description, imgpath, className }) => {
@@ -9,10 +10,13 @@ const Workcard = ({ tittle, description, imgpath, className }) => {
     >
       <img
         src={imgpath}
-        className="bigimg absolute inset-0 h-full w-full object-cover"
+        className="bigimg absolute inset-0 h-full w-full object-cover scale-105 blur-[3px] "
       />
 
-      <div className="absolute left-1/2 top-1/2 h-[57%] w-[50%] -translate-x-1/2 -translate-y-1/2 flex justify-around items-center">
+          <div className="gradient absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent" />
+     
+
+      <div className="absolute left-1/2 top-1/2 h-[65%] w-[60%] z-10 -translate-x-1/2 -translate-y-1/2 flex justify-around items-center">
 
         {/* Text */}
         <div className="text h-full w-[40%]">
@@ -23,7 +27,7 @@ const Workcard = ({ tittle, description, imgpath, className }) => {
         </div>
 
         {/* Small Image */}
-        <div className="subimg h-full w-[40%] overflow-hidden">
+        <div className="h-full w-[38%] overflow-hidden">
           <img
             src={imgpath}
             className="smallimg h-full w-full object-cover"
@@ -36,3 +40,4 @@ const Workcard = ({ tittle, description, imgpath, className }) => {
 };
 
 export default Workcard;
+
