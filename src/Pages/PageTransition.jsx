@@ -36,9 +36,7 @@ const PageTransition = ({
   const lenisRef = useRef(null);
 
 
-  // =========================
-  // LENIS SMOOTH SCROLL
-  // =========================
+ 
   useEffect(() => {
 
     const lenis = new Lenis({
@@ -57,7 +55,7 @@ const PageTransition = ({
     lenis.on("scroll", ScrollTrigger.update);
 
 
-    // DEBUG - Check if Lenis is scrolling
+    
     lenis.on("scroll", (e) => {
       console.log("LENIS SCROLL:", e.scroll);
     });
@@ -95,10 +93,7 @@ const PageTransition = ({
   }, []);
 
 
-  // =========================
-  // REFRESH SCROLLTRIGGER
-  // ON WINDOW RESIZE
-  // =========================
+  
   useEffect(() => {
 
     const handleResize = () => {
@@ -126,9 +121,7 @@ const PageTransition = ({
   }, []);
 
 
-  // =========================
-  // HANDLE PAGE CHANGE
-  // =========================
+
   useEffect(() => {
 
     if (
@@ -170,9 +163,7 @@ const PageTransition = ({
   }, [location]);
 
 
-  // =========================
-  // NAVBAR THEME
-  // =========================
+  //navbar theme for nav text color
   const themeMap = {
 
     "/about": "light",
@@ -189,9 +180,8 @@ const PageTransition = ({
     "dark";
 
 
-  // =========================
   // PAGE TRANSITION
-  // =========================
+  
   useEffect(() => {
 
     if (!oldLocation) return;
@@ -241,9 +231,7 @@ const PageTransition = ({
   }, [oldLocation]);
 
 
-  // =========================
-  // ROUTES
-  // =========================
+  //routes 
   const AppRoutes = ({
     routeLocation
   }) => (
@@ -290,15 +278,13 @@ const PageTransition = ({
   );
 
 
-  // =========================
-  // RETURN
-  // =========================
+
   return (
 
     <div className="relative min-h-screen">
 
 
-      {/* NAVBAR */}
+    
 
       {location.pathname !== "/" && (
 
@@ -307,7 +293,7 @@ const PageTransition = ({
       )}
 
 
-      {/* OLD PAGE */}
+  
 
       {oldLocation && (
 
@@ -330,7 +316,7 @@ const PageTransition = ({
       )}
 
 
-      {/* NEW PAGE */}
+      {/* new page here */}
 
       <div
 

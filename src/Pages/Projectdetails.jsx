@@ -8,13 +8,12 @@ const Projectdetails = () => {
        const project = projects.find(
     (project) => project.id === Number(id)
   );
-
+//acess like project.title like this
   
 
   return (
     <div className='text-9xl text-black'>
-        Projectdetails {id}
-          {project.title}
+        
         
         </div>
   )

@@ -26,6 +26,26 @@ const Project = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
 
+  const handleProjectClick = (project) => {
+  
+
+  const work = container.current.querySelector(
+    `.work-${project.id}`
+  );
+
+  const smallimg = work.querySelector(".smallimg");
+
+  gsap.to(smallimg, {
+     yPercent: 105,
+          duration:2,
+          ease: "thirasEase",
+
+    onComplete: () => {
+      navigate(`/projects/${project.id}`);
+    }
+  });
+};
+
   useGSAP(() => {
     let currentIndex = 0;
     let isAnimating = false;
@@ -134,9 +154,9 @@ gsap.set(currentWork, {
       tl.to(
         bigimg,
         {
-          yPercent: -120,
-          scaleX:1.5,
-          duration:3 ,
+          yPercent: -110,
+          duration:2 ,
+          scale:1.2,
           ease: "thirasEase",
         },
         0
@@ -146,7 +166,7 @@ gsap.set(currentWork, {
         smallimg,
         {
           yPercent: 105,
-          duration: 2,
+          duration:2,
           ease: "thirasEase",
         },
         0
@@ -161,7 +181,7 @@ gsap.set(currentWork, {
         {
           opacity: 0,
           y: -50,
-          duration: 2,
+          duration: 1,
           ease: "power2.out",
         },
         0
@@ -172,7 +192,7 @@ gsap.set(currentWork, {
         {
           opacity: 1,
           y: 0,
-          duration:2,
+          duration:1,
           ease: "power3.out",
         },
         0.3
@@ -210,7 +230,7 @@ gsap.set(currentWork, {
             tittle={project.title}
             description={project.description}
             imgpath={project.image}
-              onClick={() => navigate(`/projects/${project.id}`)}
+              onClick={() => handleProjectClick(project)}
           />
         </div>
       ))}

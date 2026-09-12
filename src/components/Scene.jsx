@@ -13,6 +13,7 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import screenVideoSrc from "../assets/screen.mp4";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -215,7 +216,7 @@ export const Scene = forwardRef((props, ref) => {
       );
 
       loader.load(
-        "/models/yoki.glb",
+        "/models/yoki1.glb",
         (gltf) => {
 
           const laptop =
