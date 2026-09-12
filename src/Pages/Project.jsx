@@ -1,54 +1,14 @@
 
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Workcard from "../components/Workcard";
 import { CustomEase } from "gsap/CustomEase";
-import Work1 from "../assets/work1.webp";
-import Work2 from "../assets/contact.jpg";
-import Work3 from "../assets/work3.jpg";
-import Work4 from "../assets/work4.jpg";
-import Work5 from "../assets/work5.jpg";
-import Work6 from "../assets/work6.jpg";
+import { projects } from "../assets/projectdata";
 
-const projects = [
-  {
-    id: 1,
-    title: "Portfolio Website",
-    description: "Modern developer showcase",
-    image: Work1,
-  },
-  {
-    id: 2,
-    title: "WebSocket Game",
-    description: "Real time multiplayer",
-    image: Work2,
-  },
-  {
-    id: 3,
-    title: "Task Manager",
-    description: "Simple productivity platform",
-    image: Work3,
-  },
-  {
-    id: 4,
-    title: "E-Commerce Store",
-    description: "Modern online shopping",
-    image: Work4,
-  },
-  {
-    id: 5,
-    title: "Social Platform",
-    description: "Connect and share",
-    image: Work5,
-  },
-  {
-    id: 6,
-    title: "Data Dashboard",
-    description: "Visualize important insights",
-    image: Work6,
-  },
-];
+
+
 gsap.registerPlugin(CustomEase);
 CustomEase.create(
   "thirasEase",
@@ -63,6 +23,7 @@ CustomEase.create(
 
 const Project = () => {
   const container = useRef(null);
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
 
   useGSAP(() => {
@@ -173,8 +134,9 @@ gsap.set(currentWork, {
       tl.to(
         bigimg,
         {
-          yPercent: -105,
-          duration: 2,
+          yPercent: -120,
+          scaleX:1.5,
+          duration:3 ,
           ease: "thirasEase",
         },
         0
@@ -199,7 +161,7 @@ gsap.set(currentWork, {
         {
           opacity: 0,
           y: -50,
-          duration: 0.8,
+          duration: 2,
           ease: "power2.out",
         },
         0
@@ -210,7 +172,7 @@ gsap.set(currentWork, {
         {
           opacity: 1,
           y: 0,
-          duration: 0.9,
+          duration:2,
           ease: "power3.out",
         },
         0.3
@@ -248,6 +210,7 @@ gsap.set(currentWork, {
             tittle={project.title}
             description={project.description}
             imgpath={project.image}
+              onClick={() => navigate(`/projects/${project.id}`)}
           />
         </div>
       ))}

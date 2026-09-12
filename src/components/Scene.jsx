@@ -215,7 +215,7 @@ export const Scene = forwardRef((props, ref) => {
       );
 
       loader.load(
-        "/models/laptop.glb",
+        "/models/yoki.glb",
         (gltf) => {
 
           const laptop =

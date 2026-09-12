@@ -13,6 +13,7 @@ import Home from "./Home";
 import About from "./About";
 import Contact from "./Contact";
 import Project from "./Project";
+import Projectdetails from "./Projectdetails";
 
 import Navbar from "../components/Navbar";
 
@@ -278,6 +279,11 @@ const PageTransition = ({
         path="/projects"
         element={<Project />}
       />
+
+      <Route 
+  path="/projects/:id" 
+  element={<Projectdetails />} 
+/>
 
     </Routes>
 
