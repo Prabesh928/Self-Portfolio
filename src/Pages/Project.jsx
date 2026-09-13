@@ -235,7 +235,7 @@ gsap.set(currentWork, {
         </div>
       ))}
 
-      <div className="absolute bottom-10 right-10 z-50 text-white text-xl">
+      <div className=" right-10 z-50 text-white text-xl">
   {String(currentPage).padStart(2, "0")}
   /
   {String(projects.length).padStart(2, "0")}
