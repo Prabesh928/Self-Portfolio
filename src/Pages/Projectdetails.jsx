@@ -103,10 +103,10 @@ useGSAP(() => {
         
       </div>
 
-  <div className="projectgrid relative h-[120vh] w-screen overflow-hidden bg-[#f5f5f3]">
+  <div className="projectgrid relative h-screen w-screen overflow-hidden bg-[#f5f5f3]">
 
   {/* IMAGE 1 - LEFT */}
-  <div className="img1 absolute left-[175px] top-[207px] h-[350px] w-[366px] overflow-hidden">
+  <div className="img1 absolute left-[10.5%] top-[24%] h-[40%] w-[21.5%] overflow-hidden">
     <img
       src={projects[0].image}
       className="h-full w-full object-cover"
@@ -115,7 +115,7 @@ useGSAP(() => {
 
 
   {/* IMAGE 2 - TOP CENTER */}
-  <div className="img2 absolute left-[574px] top-[54px] h-[261px] w-[600px] overflow-hidden">
+  <div className="img2 absolute left-[34%] top-[6%] h-[30%] w-[35%] overflow-hidden">
     <img
       src={projects[1].image}
       className="h-full w-full object-cover"
@@ -124,7 +124,7 @@ useGSAP(() => {
 
 
   {/* IMAGE 3 - CENTER */}
-  <div className="img3 absolute left-[578px] top-[337px] h-[220px] w-[502px] overflow-hidden">
+  <div className="img3 absolute left-[34%] top-[39%] h-[25%] w-[29.5%] overflow-hidden">
     <img
       src={projects[2].image}
       className="h-full w-full object-cover"
@@ -133,7 +133,7 @@ useGSAP(() => {
 
 
   {/* IMAGE 4 - RIGHT */}
-  <div className="img4 absolute left-[1114px] top-[337px] h-[220px] w-[505px] overflow-hidden">
+  <div className="img4 absolute left-[66%] top-[39%] h-[25%] w-[30%] overflow-hidden">
     <img
       src={projects[3].image}
       className="h-full w-full object-cover"
@@ -142,7 +142,7 @@ useGSAP(() => {
 
 
   {/* IMAGE 5 - BOTTOM LEFT */}
-  <div className="img5 absolute left-[59px] top-[578px] h-[260px] w-[603px] overflow-hidden">
+  <div className="img5 absolute left-[3.5%] top-[67%] h-[28%] w-[35%] overflow-hidden">
     <img
       src={projects[4].image}
       className="h-full w-full object-cover"
@@ -151,7 +151,7 @@ useGSAP(() => {
 
 
   {/* IMAGE 6 - BOTTOM CENTER */}
-  <div className="img6 absolute left-[694px] top-[578px] h-[260px] w-[386px] overflow-hidden">
+  <div className="img6 absolute left-[41%] top-[67%] h-[28%] w-[23%] overflow-hidden">
     <img
       src={projects[5].image}
       className="h-full w-full object-cover"
@@ -160,7 +160,7 @@ useGSAP(() => {
 
 
   {/* IMAGE 7 - BOTTOM RIGHT */}
-  <div className="img7 absolute left-[1113px] top-[578px] h-[247px] w-[406px] overflow-hidden">
+  <div className="img7 absolute left-[66%] top-[67%] h-[28%] w-[24%] overflow-hidden">
     <img
       src={projects[0].image}
       className="h-full w-full object-cover"
@@ -168,10 +168,7 @@ useGSAP(() => {
   </div>
 
 
-  {/* MENU */}
-  <div className="absolute right-[35px] top-[68px] text-[20px] text-black">
-    Menu
-  </div>
+
 
 </div>
 
