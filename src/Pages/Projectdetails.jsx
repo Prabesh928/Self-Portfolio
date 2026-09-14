@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { projects } from "../assets/projectdata";
-
+import { Bookscene } from "../components/Bookscene";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -101,7 +101,7 @@ yPercent: -50,
 });
 
 gsap.to(".commonimg", {
-  scale: 3,
+  scale: 4,
   scrollTrigger: {
     trigger: ".projectgrid",
     start: "top top",
@@ -110,12 +110,12 @@ gsap.to(".commonimg", {
   }
 });
 
-gsap.to(".img1", { x: -4500, y: -150, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
-gsap.to(".img2", { y: -2000, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
-gsap.to(".img4", { x: 4500, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
-gsap.to(".img5", { x: -3500, y: 2200, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
-gsap.to(".img6", { y: 1900, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
-gsap.to(".img7", { x: 5500, y: 2200, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img1", { x: -1500, y: -150, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img2", { y: -800, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img4", { x: 1500, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img5", { x: -1600, y: 1000, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img6", { y: 750, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img7", { x: 3000, y: 1500, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
 
 
   
@@ -222,6 +222,11 @@ gsap.to(".img7", { x: 5500, y: 2200, scrollTrigger: { trigger: ".projectgrid", s
 
 </div>
 
+<div className=" h-[45vh] w-screen bg-white">
+  chicken 
+</div>
+
+<Bookscene/>
 
 
         
