@@ -81,8 +81,8 @@ useGSAP(() => {
 });
 
 gsap.to(".img3", {
- width: "100vw",
-height: "100vh",
+ width: "screen",
+height: "screen",
 left: "50%",
 top: "50%",
 xPercent: -50,
@@ -93,12 +93,15 @@ yPercent: -50,
     end: "+=1400",
     scrub: true,
     pin: true,
-    markers:true
+    markers:true,
+     anticipatePin: 1,
+  fastScrollEnd: true,
+  invalidateOnRefresh: true,
   }
 });
 
 gsap.to(".commonimg", {
-  scale: 7.5,
+  scale: 3,
   scrollTrigger: {
     trigger: ".projectgrid",
     start: "top top",
@@ -110,8 +113,8 @@ gsap.to(".commonimg", {
 gsap.to(".img1", { x: -4500, y: -150, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
 gsap.to(".img2", { y: -2000, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
 gsap.to(".img4", { x: 4500, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
-gsap.to(".img5", { x: -3500, y: 2000, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
-gsap.to(".img6", { y: 350, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img5", { x: -3500, y: 2200, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img6", { y: 1900, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
 gsap.to(".img7", { x: 5500, y: 2200, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
 
 
