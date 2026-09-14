@@ -89,7 +89,7 @@ xPercent: -50,
 yPercent: -50,
   scrollTrigger: {
     trigger: ".projectgrid",
-    start: "top+=100 top",
+    start: "top top",
     end: "+=1400",
     scrub: true,
     pin: true,
@@ -98,7 +98,7 @@ yPercent: -50,
 });
 
 gsap.to(".commonimg", {
-  scale: 4,
+  scale: 7.5,
   scrollTrigger: {
     trigger: ".projectgrid",
     start: "top top",
@@ -107,12 +107,12 @@ gsap.to(".commonimg", {
   }
 });
 
-gsap.to(".img1", { x: -610, y: -150, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
-gsap.to(".img2", { y: -340, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
-gsap.to(".img4", { x: 700, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
-gsap.to(".img5", { x: -500, y: 310, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img1", { x: -4500, y: -150, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img2", { y: -2000, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img4", { x: 4500, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img5", { x: -3500, y: 2000, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
 gsap.to(".img6", { y: 350, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
-gsap.to(".img7", { x: 680, y: 320, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img7", { x: 5500, y: 2200, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
 
 
   
@@ -151,7 +151,7 @@ gsap.to(".img7", { x: 680, y: 320, scrollTrigger: { trigger: ".projectgrid", sta
   <div className="projectgrid  relative h-screen w-screen overflow-hidden bg-[#f5f5f3]">
 
   {/* IMAGE 1 - LEFT */}
-  <div className="commonimg img1 absolute left-[10.5%] top-[25%] h-[40%] w-[20.5%] overflow-hidden">
+  <div className="commonimg img1 absolute left-[13.5%] top-[24%] h-[40%] w-[20.5%] overflow-hidden">
     <img
       src={projects[0].image}
       className="h-full w-full object-cover"
@@ -160,7 +160,7 @@ gsap.to(".img7", { x: 680, y: 320, scrollTrigger: { trigger: ".projectgrid", sta
 
 
   {/* IMAGE 2 - TOP CENTER */}
-  <div className="commonimg img2 absolute left-[34%] top-[7%] h-[30%] w-[34%] overflow-hidden">
+  <div className="commonimg img2 absolute left-[36%] top-[5%] h-[30%] w-[34%] overflow-hidden">
     <img
       src={projects[1].image}
       className="h-full w-full object-cover"
@@ -180,7 +180,7 @@ gsap.to(".img7", { x: 680, y: 320, scrollTrigger: { trigger: ".projectgrid", sta
 
 
   {/* IMAGE 4 - RIGHT */}
-  <div className="commonimg img4 absolute left-[66%] top-[39%] h-[25%] w-[28%] overflow-hidden">
+  <div className="commonimg img4 absolute left-[65.5%] top-[37.5%] h-[25%] w-[28%] overflow-hidden">
     <img
       src={projects[3].image}
       className="h-full w-full object-cover"
@@ -189,7 +189,7 @@ gsap.to(".img7", { x: 680, y: 320, scrollTrigger: { trigger: ".projectgrid", sta
 
 
   {/* IMAGE 5 - BOTTOM LEFT */}
-  <div className="commonimg img5 absolute left-[3.5%] top-[67%] h-[28%] w-[33%] overflow-hidden">
+  <div className="commonimg img5 absolute left-[7.5%] top-[67%] h-[28%] w-[33%] overflow-hidden">
     <img
       src={projects[4].image}
       className="h-full w-full object-cover"
@@ -198,7 +198,7 @@ gsap.to(".img7", { x: 680, y: 320, scrollTrigger: { trigger: ".projectgrid", sta
 
 
   {/* IMAGE 6 - BOTTOM CENTER */}
-  <div className="commonimg img6 absolute left-[41%] top-[67%] h-[28%] w-[22%] overflow-hidden">
+  <div className="commonimg img6 absolute left-[42%] top-[67%] h-[28%] w-[22%] overflow-hidden">
     <img
       src={projects[5].image}
       className="h-full w-full object-cover"
@@ -207,7 +207,7 @@ gsap.to(".img7", { x: 680, y: 320, scrollTrigger: { trigger: ".projectgrid", sta
 
 
   {/* IMAGE 7 - BOTTOM RIGHT */}
-  <div className="img7 commonimg absolute left-[66%] top-[67%] h-[28%] w-[23%] overflow-hidden">
+  <div className="img7 commonimg absolute left-[65.5%] top-[67%] h-[28%] w-[23%] overflow-hidden">
     <img
       src={projects[0].image}
       className="h-full w-full object-cover"
