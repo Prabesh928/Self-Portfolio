@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -7,146 +6,240 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 gsap.registerPlugin(ScrollTrigger);
 
-
 export const Bookscene = () => {
-      const blueRef = useRef(null);
-      const canvasContainerRef = useRef(null);
-    
-      useEffect(() => {
-        // --- basic setup: scene, camera, renderer ---
-        const container = canvasContainerRef.current;
-        if (!container) return;
-    
-        const scene = new THREE.Scene();
-    
-       const camera = new THREE.PerspectiveCamera(
+  const blueRef = useRef(null);
+  const canvasContainerRef = useRef(null);
+
+  useEffect(() => {
+    const container = canvasContainerRef.current;
+
+    if (!container) return;
+
+    // SCENE
+    const scene = new THREE.Scene();
+
+    // CAMERA
+    const camera = new THREE.PerspectiveCamera(
       45,
       container.clientWidth / container.clientHeight,
       0.1,
-      100
+      1000
     );
-    
-    
-    camera.position.set(17.47, 52.804, 33.733);
-    
-    
-    camera.lookAt(0, 0, 0);
-    
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        container.appendChild(renderer.domElement);
-    
-        // --- lights ---
-        const light = new THREE.DirectionalLight(0xffffff, 3);
-        light.position.set(2, 3, 2);
-        scene.add(light);
-    
-        const ambient = new THREE.AmbientLight(0xffffff, 0.4);
-        scene.add(ambient);
-    
-        // --- book import ---
-        let mixer = null;
-        let actions = [];
-        let totalDuration = 1; // avoid divide-by-zero before load finishes
-    
-      
-      const loader = new GLTFLoader();
-        loader.load(
-          "/models/book.glb",
-          (gltf) => {
-            const bookObject = gltf.scene;
-    
-            // --- CHANGE HERE: Normalize the model to (0,0,0) ---
-            bookObject.updateMatrixWorld(true);
-            const box = new THREE.Box3().setFromObject(bookObject);
-            const size = box.getSize(new THREE.Vector3());
-            const center = box.getCenter(new THREE.Vector3());
-            console.log("Book size:", size, "center:", center);
-    
-            // This shifts the model's center right to world origin (0,0,0)
-            bookObject.position.sub(center);
-    
-            // Add the centered object to the scene
-            scene.add(bookObject);
-            // ---------------------------------------------------
-    
-            mixer = new THREE.AnimationMixer(bookObject);
-    
-            actions = gltf.animations.map((clip) => {
-              const action = mixer.clipAction(clip);
-              action.play();
-              action.paused = true;
-              action.clampWhenFinished = true;
-              return action;
-            });
-    
-            totalDuration = Math.max(...gltf.animations.map((c) => c.duration));
-    
-            actions.forEach((a) => (a.time = 0));
-            mixer.update(0);
-          },
-          undefined,
-          (err) => console.error("Error loading book.glb:", err)
-        );
-    
-        // --- render loop ---
-        let frameId;
-        const animate = () => {
-          frameId = requestAnimationFrame(animate);
-          renderer.render(scene, camera);
-        };
-        animate();
-    
-        // --- resize ---
-        const handleResize = () => {
-          camera.aspect = container.clientWidth / container.clientHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(container.clientWidth, container.clientHeight);
-        };
-        window.addEventListener("resize", handleResize);
-    
-        // --- scroll trigger: pin + scrub, drives all clips together ---
-        const st = ScrollTrigger.create({
-          trigger: blueRef.current,
-          start: "top top",
-          end: "+=400%",
-          markers: true,
-          pin: true,
-          scrub: true,
-          onUpdate: (self) => {
-            if (!mixer || actions.length === 0) return;
-            const t = self.progress * totalDuration;
-            actions.forEach((a) => {
-              a.time = t;
-            });
-            mixer.update(0); // 0 delta - we're setting time directly, not advancing playback
-          },
+
+ 
+camera.position.set(
+  1.208,
+  -135.43,
+  32.593
+);
+
+camera.rotation.set(
+  THREE.MathUtils.degToRad(89.813),
+  THREE.MathUtils.degToRad(-0.9619),
+  THREE.MathUtils.degToRad(-4.7326)
+);
+
+    // RENDERER
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+    });
+
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, 2)
+    );
+
+    renderer.setSize(
+      container.clientWidth,
+      container.clientHeight
+    );
+
+    container.appendChild(renderer.domElement);
+
+    // LIGHTS
+    const light = new THREE.DirectionalLight(
+      0xffffff,
+      3
+    );
+
+    light.position.set(10, 10, 10);
+
+    scene.add(light);
+
+    const ambient = new THREE.AmbientLight(
+      0xffffff,
+      1
+    );
+
+    scene.add(ambient);
+
+    // BOOK
+    let mixer = null;
+    let actions = [];
+    let totalDuration = 1;
+
+    const loader = new GLTFLoader();
+
+    loader.load(
+      "/models/book.glb",
+
+      (gltf) => {
+        const bookObject = gltf.scene;
+
+     
+const bookWrapper = new THREE.Group();
+
+
+bookWrapper.add(bookObject);
+
+
+
+bookWrapper.position.set(
+  0.39925,
+  0.018592,
+  30.778
+);
+
+
+
+bookWrapper.rotation.set(
+  THREE.MathUtils.degToRad(0),
+   THREE.MathUtils.degToRad(180),
+  THREE.MathUtils.degToRad(180)
+);
+
+bookWrapper.scale.set(
+  2.6,
+  2,
+  2.002
+);
+
+// Add wrapper to scene
+scene.add(bookWrapper);
+
+        
+
+        
+       
+
+        // Animation
+        mixer = new THREE.AnimationMixer(bookObject);
+
+        actions = gltf.animations.map((clip) => {
+          const action = mixer.clipAction(clip);
+
+          action.play();
+          action.paused = true;
+          action.clampWhenFinished = true;
+
+          return action;
         });
-    
-        // --- cleanup ---
-        return () => {
-          st.kill();
-          window.removeEventListener("resize", handleResize);
-          cancelAnimationFrame(frameId);
-          renderer.dispose();
-          if (container.contains(renderer.domElement)) {
-            container.removeChild(renderer.domElement);
-          }
-        };
-      }, []);
+
+        if (gltf.animations.length > 0) {
+          totalDuration = Math.max(
+            ...gltf.animations.map(
+              (clip) => clip.duration
+            )
+          );
+        }
+
+        // actions.forEach((action) => {
+        //   action.time = 0;
+        // });
+
+     mixer.setTime(totalDuration);
+      },
+
+      undefined,
+
+      (err) => {
+        console.error(err);
+      }
+    );
+
+    // RENDER
+    let frameId;
+
+    const animate = () => {
+      frameId = requestAnimationFrame(animate);
+
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    // RESIZE
+    const handleResize = () => {
+      camera.aspect =
+        container.clientWidth /
+        container.clientHeight;
+
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(
+        container.clientWidth,
+        container.clientHeight
+      );
+    };
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    // SCROLL
+    const st = ScrollTrigger.create({
+      trigger: blueRef.current,
+      start: "top top",
+      end: "+=400%",
+      pin: true,
+      scrub: true,
+
+      onUpdate: (self) => {
+        if (!mixer || actions.length === 0) return;
+
+        const t =
+          self.progress * totalDuration;
+
+        actions.forEach((action) => {
+          action.time = t;
+        });
+
+        mixer.update(0);
+      },
+    });
+
+    return () => {
+      st.kill();
+
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+
+      cancelAnimationFrame(frameId);
+
+      renderer.dispose();
+
+      if (
+        container.contains(renderer.domElement)
+      ) {
+        container.removeChild(
+          renderer.domElement
+        );
+      }
+    };
+  }, []);
+
   return (
-   <div ref={blueRef} className="h-[100vh] w-full bg-blue-600 flex">
-      <div className="bookleft bg-green-900 w-1/2 flex items-center">
-        <p className="p-12 text-white">
-          this is only for the deom purpose only for the first time. A computer is an electronic devie that is capable of handling the input to give the meaning ful result calle doutput . 
-          
-        </p>
-      </div>
+    <div
+      ref={blueRef}
+      className="h-[100vh] w-full bg-black"
+    >
       <div
         ref={canvasContainerRef}
-        className="bookright bg-yellow-500 w-1/2 h-full"
+        className="w-full h-full"
       />
     </div>
-  )
-}
+  );
+};
