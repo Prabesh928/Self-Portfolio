@@ -30,7 +30,7 @@ const Projectdetails = () => {
         start: "top top",
         end: "bottom bottom",
         scrub: true,
-        markers:true,
+       
      
       }
     });
@@ -68,9 +68,54 @@ useGSAP(() => {
       start: "top bottom",
       end: "top top",
       scrub: true,
-      markers: true,
+     
     }
   });
+
+
+  gsap.set(".img3", {
+  left: "50%",
+  top: "50%",
+  xPercent: -50,
+  yPercent: -50
+});
+
+gsap.to(".img3", {
+ width: "100vw",
+height: "100vh",
+left: "50%",
+top: "50%",
+xPercent: -50,
+yPercent: -50,
+  scrollTrigger: {
+    trigger: ".projectgrid",
+    start: "top+=100 top",
+    end: "+=1400",
+    scrub: true,
+    pin: true,
+    markers:true
+  }
+});
+
+gsap.to(".commonimg", {
+  scale: 4,
+  scrollTrigger: {
+    trigger: ".projectgrid",
+    start: "top top",
+    end: "+=1400",
+    scrub: true,
+  }
+});
+
+gsap.to(".img1", { x: -610, y: -150, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img2", { y: -340, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img4", { x: 700, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img5", { x: -500, y: 310, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img6", { y: 350, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+gsap.to(".img7", { x: 680, y: 320, scrollTrigger: { trigger: ".projectgrid", start: "top top", end: "+=1300", scrub: true }});
+
+
+  
 
 }, { scope: sectionRef });
  
@@ -103,10 +148,10 @@ useGSAP(() => {
         
       </div>
 
-  <div className="projectgrid relative h-screen w-screen overflow-hidden bg-[#f5f5f3]">
+  <div className="projectgrid  relative h-screen w-screen overflow-hidden bg-[#f5f5f3]">
 
   {/* IMAGE 1 - LEFT */}
-  <div className="img1 absolute left-[10.5%] top-[24%] h-[40%] w-[21.5%] overflow-hidden">
+  <div className="commonimg img1 absolute left-[10.5%] top-[25%] h-[40%] w-[20.5%] overflow-hidden">
     <img
       src={projects[0].image}
       className="h-full w-full object-cover"
@@ -115,7 +160,7 @@ useGSAP(() => {
 
 
   {/* IMAGE 2 - TOP CENTER */}
-  <div className="img2 absolute left-[34%] top-[6%] h-[30%] w-[35%] overflow-hidden">
+  <div className="commonimg img2 absolute left-[34%] top-[7%] h-[30%] w-[34%] overflow-hidden">
     <img
       src={projects[1].image}
       className="h-full w-full object-cover"
@@ -124,7 +169,9 @@ useGSAP(() => {
 
 
   {/* IMAGE 3 - CENTER */}
-  <div className="img3 absolute left-[34%] top-[39%] h-[25%] w-[29.5%] overflow-hidden">
+  <div 
+   style={{ minHeight: "25%", minWidth: "28.5%" }}
+  className="img3 -z-1 commonimg  absolute left-[34%] top-[39%]  overflow-hidden">
     <img
       src={projects[2].image}
       className="h-full w-full object-cover"
@@ -133,7 +180,7 @@ useGSAP(() => {
 
 
   {/* IMAGE 4 - RIGHT */}
-  <div className="img4 absolute left-[66%] top-[39%] h-[25%] w-[30%] overflow-hidden">
+  <div className="commonimg img4 absolute left-[66%] top-[39%] h-[25%] w-[28%] overflow-hidden">
     <img
       src={projects[3].image}
       className="h-full w-full object-cover"
@@ -142,7 +189,7 @@ useGSAP(() => {
 
 
   {/* IMAGE 5 - BOTTOM LEFT */}
-  <div className="img5 absolute left-[3.5%] top-[67%] h-[28%] w-[35%] overflow-hidden">
+  <div className="commonimg img5 absolute left-[3.5%] top-[67%] h-[28%] w-[33%] overflow-hidden">
     <img
       src={projects[4].image}
       className="h-full w-full object-cover"
@@ -151,7 +198,7 @@ useGSAP(() => {
 
 
   {/* IMAGE 6 - BOTTOM CENTER */}
-  <div className="img6 absolute left-[41%] top-[67%] h-[28%] w-[23%] overflow-hidden">
+  <div className="commonimg img6 absolute left-[41%] top-[67%] h-[28%] w-[22%] overflow-hidden">
     <img
       src={projects[5].image}
       className="h-full w-full object-cover"
@@ -160,7 +207,7 @@ useGSAP(() => {
 
 
   {/* IMAGE 7 - BOTTOM RIGHT */}
-  <div className="img7 absolute left-[66%] top-[67%] h-[28%] w-[24%] overflow-hidden">
+  <div className="img7 commonimg absolute left-[66%] top-[67%] h-[28%] w-[23%] overflow-hidden">
     <img
       src={projects[0].image}
       className="h-full w-full object-cover"
@@ -171,6 +218,8 @@ useGSAP(() => {
 
 
 </div>
+
+
 
         
         
