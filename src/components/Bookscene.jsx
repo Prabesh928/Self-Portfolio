@@ -6,6 +6,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 import page1 from "../assets/bookpage1.png";
 import page2 from "../assets/bookpage2.png";
+import page3 from '../assets/bookpage3.jpg'
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -77,13 +78,23 @@ export const Bookscene = () => {
       "/models/book.glb",
       (gltf) => {
         const bookObject = gltf.scene;
+        
+
+        bookObject.traverse((child) => {
+  if (child.isMesh) {
+    console.log("MESH:", child.name);
+  }
+});
 
         const textureLoader = new THREE.TextureLoader();
 
         const textures = [
           textureLoader.load(page1),
           textureLoader.load(page2),
+          textureLoader.load(page3),
         ];
+
+        
 
         textures.forEach((texture) => {
           texture.flipY = false;
@@ -106,6 +117,16 @@ export const Bookscene = () => {
             child.material.map = textures[1];
             child.material.needsUpdate = true;
           }
+
+        if (child.isMesh && child.name === "Page-3") {
+  console.log("PAGE 3 FOUND:", child);
+  console.log("MATERIAL:", child.material);
+  console.log("UV:", child.geometry.attributes.uv);
+
+  child.material.map = textures[2];
+  child.material.needsUpdate = true;
+}
+
         });
 
         bookWrapper = new THREE.Group();
@@ -131,6 +152,54 @@ export const Bookscene = () => {
         );
 
         scene.add(bookWrapper);
+        const axesHelper = new THREE.AxesHelper(50);
+scene.add(axesHelper);
+
+        const shadowCanvas = document.createElement("canvas");
+        shadowCanvas.width = 256;
+        shadowCanvas.height = 256;
+        const shadowCtx = shadowCanvas.getContext("2d");
+        const shadowGradient = shadowCtx.createRadialGradient(
+          128, 128, 0,
+          128, 128, 128
+        );
+        shadowGradient.addColorStop(0, "rgba(0,0,0,0.6)");
+        shadowGradient.addColorStop(0.7, "rgba(0,0,0,0.25)");
+        shadowGradient.addColorStop(1, "rgba(0,0,0,0)");
+        shadowCtx.fillStyle = shadowGradient;
+        shadowCtx.fillRect(0, 0, 256, 256);
+
+        const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
+
+        const shadowMaterial = new THREE.MeshBasicMaterial({
+          map: shadowTexture,
+          transparent: true,
+          depthWrite: false,
+          depthTest: false,
+          side: THREE.DoubleSide,
+        });
+
+        const SHADOW_OFFSET_X = 0;
+        const SHADOW_OFFSET_Y = -8;
+        const SHADOW_OFFSET_Z = 0;
+
+        const shadowGeometry = new THREE.PlaneGeometry(40, 25);
+
+        const shadowMesh = new THREE.Mesh(
+          shadowGeometry,
+          shadowMaterial
+        );
+
+        shadowMesh.rotation.x = -Math.PI / 2;
+        shadowMesh.renderOrder = -1;
+
+        shadowMesh.position.set(
+          SHADOW_OFFSET_X,
+          SHADOW_OFFSET_Y,
+          SHADOW_OFFSET_Z
+        );
+
+        bookWrapper.add(shadowMesh);
 
         mixer = new THREE.AnimationMixer(
           bookObject
@@ -213,11 +282,6 @@ export const Bookscene = () => {
     return;
   }
 
-  // ==========================================
-  // 0% → 32%
-  // GLB ANIMATION: 0 → 32
-  // ==========================================
-
   if (progress <= 0.32) {
     
     const pageProgress = gsap.utils.mapRange(
@@ -249,13 +313,13 @@ export const Bookscene = () => {
 
   camera.position.y = THREE.MathUtils.lerp(
     -135.43,
-    -125,
+    -90,
     progress / 0.32
   );
 
   camera.position.z = THREE.MathUtils.lerp(
     32.593,
-    20,
+    25,
     progress / 0.32
     
   );
@@ -268,12 +332,6 @@ export const Bookscene = () => {
 
 
   }
-
-  // ==========================================
-  // 32% → 50%
-  // CAMERA 1
-  // GLB FROZEN AT 32%
-  // ==========================================
 
   if (
     progress >= 0.32 &&
@@ -288,32 +346,76 @@ export const Bookscene = () => {
         progress
       );
 
-    camera.position.x =
-      THREE.MathUtils.lerp(
-        1.208,
-        3,
-        cameraProgress
-      );
+ 
 
-    camera.position.y =
-      THREE.MathUtils.lerp(
-        -135.43,
-        -125,
-        cameraProgress
-      );
+     camera.position.x = THREE.MathUtils.lerp(
+    1.208,
+    2,
+    progress / 0.32
+  );
 
-    camera.position.z =
-      THREE.MathUtils.lerp(
-        32.593,
-        20,
-        cameraProgress
-      );
+     camera.position.z = THREE.MathUtils.lerp(
+    32.593,
+    34,
+    progress / 0.32
+    
+  );
+
+     camera.position.x = THREE.MathUtils.lerp(
+    2,
+    3,
+    progress / 0.32
+  );
+
+  camera.position.y = THREE.MathUtils.lerp(
+    -135.43,
+    -85,
+    progress / 0.32
+  );
+
+ 
+
+ 
+
+
+    camera.position.z = THREE.MathUtils.lerp(
+    34,
+    36,
+    progress / 0.32
+    
+  );
+
+    camera.position.z = THREE.MathUtils.lerp(
+    36,
+    38,
+    progress / 0.32
+    
+  );
+
+    camera.position.z = THREE.MathUtils.lerp(
+    32.593,
+    40,
+    progress / 0.32
+    
+  );
+
+  camera.rotation.z = THREE.MathUtils.lerp(
+  THREE.MathUtils.degToRad(-4.7326),
+  THREE.MathUtils.degToRad(-5),
+  progress / 0.32
+);
+
+
+  camera.rotation.x = THREE.MathUtils.lerp(
+  THREE.MathUtils.degToRad(89.813),
+  THREE.MathUtils.degToRad(85),
+  progress / 0.32
+);
+
+//-0.91 for y value 
+
+
   }
-
-  // ==========================================
-  // 50% → 64%
-  // GLB ANIMATION: 32 → 64
-  // ==========================================
 
   if (
     progress >= 0.50 &&
@@ -337,12 +439,6 @@ export const Bookscene = () => {
 
     mixer.update(0);
   }
-
-  // ==========================================
-  // 64% → 82%
-  // CAMERA 2
-  // GLB FROZEN AT 64%
-  // ==========================================
 
   if (
     progress >= 0.64 &&
@@ -379,11 +475,6 @@ export const Bookscene = () => {
       );
   }
 
-  // ==========================================
-  // 82% → 100%
-  // GLB ANIMATION: 64 → 100
-  // ==========================================
-
   if (progress >= 0.82) {
     const pageProgress =
       gsap.utils.mapRange(
@@ -400,6 +491,10 @@ export const Bookscene = () => {
     actions.forEach((action) => {
       action.time = t;
     });
+
+ 
+    // bookWrapper.rotation.z= THREE.utils.degToRad(190)
+
 
     mixer.update(0);
   }
@@ -433,7 +528,7 @@ export const Bookscene = () => {
   return (
     <div
       ref={blueRef}
-      className="h-[100vh] w-full bg-black"
+      className="h-[100vh] w-full bg-white"
     >
       <div
         ref={canvasContainerRef}
