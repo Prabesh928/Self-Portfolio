@@ -120,7 +120,7 @@ export const Bookscene = () => {
 
         bookWrapper.rotation.set(
           THREE.MathUtils.degToRad(360),
-          THREE.MathUtils.degToRad(185),
+          THREE.MathUtils.degToRad(170),
           THREE.MathUtils.degToRad(180)
         );
 
@@ -207,56 +207,203 @@ export const Bookscene = () => {
       markers: true,
 
       onUpdate: (self) => {
-        const progress = self.progress;
+  const progress = self.progress;
 
-        // rotation 
-        
+  if (!mixer || actions.length === 0) {
+    return;
+  }
 
-        if (bookWrapper) {
-          if (progress < 0.25) {
-            const rotationProgress =
-              progress / 0.25;
+  // ==========================================
+  // 0% → 32%
+  // GLB ANIMATION: 0 → 32
+  // ==========================================
 
-            bookWrapper.rotation.y =
-              THREE.MathUtils.lerp(
-                THREE.MathUtils.degToRad(185),
-                THREE.MathUtils.degToRad(170),
-                rotationProgress
-              );
-          } else {
-            bookWrapper.rotation.y =
-              THREE.MathUtils.degToRad(170);
-          }
-        }
+  if (progress <= 0.32) {
+    
+    const pageProgress = gsap.utils.mapRange(
+      0,
+      0.32,
+      0,
+      0.32,
+      progress
+    );
 
-        // Page turn 15 per onlyu 
-        
+    const t = pageProgress * totalDuration;
 
-        if (!mixer || actions.length === 0) {
-          return;
-        }
+    actions.forEach((action) => {
+      action.time = t;
+    });
 
-        if (progress >= 0.1) {
-          const pageProgress =
-            gsap.utils.mapRange(
-              0.15,
-              1,
-              0,
-              1,
-              progress
-            );
+    mixer.update(0);
 
-          const t =
-            pageProgress *
-            totalDuration;
 
-          actions.forEach((action) => {
-            action.time = t;
-          });
+   
 
-          mixer.update(0);
-        }
-      },
+    //camera before 32 frame 
+
+     camera.position.x = THREE.MathUtils.lerp(
+    1.208,
+    3,
+    progress / 0.32
+  );
+
+  camera.position.y = THREE.MathUtils.lerp(
+    -135.43,
+    -125,
+    progress / 0.32
+  );
+
+  camera.position.z = THREE.MathUtils.lerp(
+    32.593,
+    20,
+    progress / 0.32
+    
+  );
+
+
+  // mesh position
+  bookWrapper.rotation.z = THREE.MathUtils.degToRad(
+    185
+  );
+
+
+  }
+
+  // ==========================================
+  // 32% → 50%
+  // CAMERA 1
+  // GLB FROZEN AT 32%
+  // ==========================================
+
+  if (
+    progress >= 0.32 &&
+    progress <= 0.50
+  ) {
+    const cameraProgress =
+      gsap.utils.mapRange(
+        0.32,
+        0.50,
+        0,
+        1,
+        progress
+      );
+
+    camera.position.x =
+      THREE.MathUtils.lerp(
+        1.208,
+        3,
+        cameraProgress
+      );
+
+    camera.position.y =
+      THREE.MathUtils.lerp(
+        -135.43,
+        -125,
+        cameraProgress
+      );
+
+    camera.position.z =
+      THREE.MathUtils.lerp(
+        32.593,
+        20,
+        cameraProgress
+      );
+  }
+
+  // ==========================================
+  // 50% → 64%
+  // GLB ANIMATION: 32 → 64
+  // ==========================================
+
+  if (
+    progress >= 0.50 &&
+    progress <= 0.64
+  ) {
+    const pageProgress =
+      gsap.utils.mapRange(
+        0.50,
+        0.64,
+        0.32,
+        0.64,
+        progress
+      );
+
+    const t =
+      pageProgress * totalDuration;
+
+    actions.forEach((action) => {
+      action.time = t;
+    });
+
+    mixer.update(0);
+  }
+
+  // ==========================================
+  // 64% → 82%
+  // CAMERA 2
+  // GLB FROZEN AT 64%
+  // ==========================================
+
+  if (
+    progress >= 0.64 &&
+    progress <= 0.82
+  ) {
+    const cameraProgress =
+      gsap.utils.mapRange(
+        0.64,
+        0.82,
+        0,
+        1,
+        progress
+      );
+
+    camera.position.x =
+      THREE.MathUtils.lerp(
+        3,
+        -3,
+        cameraProgress
+      );
+
+    camera.position.y =
+      THREE.MathUtils.lerp(
+        -125,
+        -145,
+        cameraProgress
+      );
+
+    camera.position.z =
+      THREE.MathUtils.lerp(
+        20,
+        22,
+        cameraProgress
+      );
+  }
+
+  // ==========================================
+  // 82% → 100%
+  // GLB ANIMATION: 64 → 100
+  // ==========================================
+
+  if (progress >= 0.82) {
+    const pageProgress =
+      gsap.utils.mapRange(
+        0.82,
+        1,
+        0.64,
+        1,
+        progress
+      );
+
+    const t =
+      pageProgress * totalDuration;
+
+    actions.forEach((action) => {
+      action.time = t;
+    });
+
+    mixer.update(0);
+  }
+},
     });
 
     return () => {
