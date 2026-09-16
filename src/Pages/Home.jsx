@@ -8,7 +8,7 @@ import Menu from "./Menu";
 import Works from "./Works";
 import Skills from "./Skills";
 import Stackingdiv from "../components/Stackingdiv";
-import Demo from "./Demo";
+
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);

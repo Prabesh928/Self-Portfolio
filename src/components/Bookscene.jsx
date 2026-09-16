@@ -231,17 +231,14 @@ scene.add(axesHelper);
 
       markers: true,
 
-      onUpdate: (self) => {
+       onUpdate: (self) => {
   const progress = self.progress;
 
   if (!mixer || actions.length === 0) {
     return;
   }
 
-  // ==========================================
-  // 0% → 32%
-  // GLB ANIMATION: 0 → 32
-  // ==========================================
+//0 to 32% mesh ani 
 
   if (progress <= 0.32) {
     
@@ -271,28 +268,42 @@ scene.add(axesHelper);
           
         
 
-    //camera before 32 frame 
+camera.position.x = THREE.MathUtils.lerp(
+  1.208,
+  -5,
+  progress / 0.32
+);
 
-     camera.position.x = THREE.MathUtils.lerp(
-    1.208,
-    2,
-    progress / 0.32
-  );
+camera.position.y = THREE.MathUtils.lerp(
+  -135.43,
+  -110,
+  progress / 0.32
+);
 
-  camera.position.y = THREE.MathUtils.lerp(
-    -135.43,
-    -110,
-    progress / 0.32
-  );
+camera.position.z = THREE.MathUtils.lerp(
+  32.593,
+  40,
+  progress / 0.32
+);
 
-  
+camera.rotation.x = THREE.MathUtils.lerp(
+  THREE.MathUtils.degToRad(89.813),
+  THREE.MathUtils.degToRad(86),
+  progress / 0.32
+);
 
-  camera.position.z = THREE.MathUtils.lerp(
-    32.593,
-    35,
-    progress / 0.32
-    
-  );
+camera.rotation.y = THREE.MathUtils.lerp(
+  THREE.MathUtils.degToRad(-0.9619),
+  THREE.MathUtils.degToRad(-3),
+  progress / 0.32
+);
+
+camera.rotation.z = THREE.MathUtils.lerp(
+  THREE.MathUtils.degToRad(-4.7326),
+  THREE.MathUtils.degToRad(-7),
+  progress / 0.32
+);
+
 
   
 
@@ -303,11 +314,7 @@ scene.add(axesHelper);
 
   }
 
-  // ==========================================
-  // 32% → 50%
-  // CAMERA 1
-  // GLB FROZEN AT 32%
-  // ==========================================
+  //32 to 40 cam1
 
   if (
     progress >= 0.32 &&
@@ -322,81 +329,27 @@ scene.add(axesHelper);
         progress
       );
 
- 
 
-//      camera.position.x = THREE.MathUtils.lerp(
-//     1.208,
-//     2,
-//     progress / 0.32
-//   );
-
-//      camera.position.z = THREE.MathUtils.lerp(
-//     32.593,
-//     34,
-//     progress / 0.32
-    
-//   );
-
-//      camera.position.x = THREE.MathUtils.lerp(
-//     2,
-//     3,
-//     progress / 0.32
-//   );
-
-//   camera.position.y = THREE.MathUtils.lerp(
-//     -135.43,
-//     -85,
-//     progress / 0.32
-//   );
-
- 
-
- 
+ camera.position.y = THREE.MathUtils.lerp(
+    -110,
+    -110,
+    cameraProgress
+  );
 
 
-//     camera.position.z = THREE.MathUtils.lerp(
-//     34,
-//     36,
-//     progress / 0.32
-    
-//   );
-
-//     camera.position.z = THREE.MathUtils.lerp(
-//     36,
-//     38,
-//     progress / 0.32
-    
-//   );
-
-//     camera.position.z = THREE.MathUtils.lerp(
-//     32.593,
-//     40,
-//     progress / 0.32
-    
-//   );
-
-//   camera.rotation.z = THREE.MathUtils.lerp(
-//   THREE.MathUtils.degToRad(-4.7326),
-//   THREE.MathUtils.degToRad(4),
-//   progress / 0.32
-// );
-
-
-//   camera.rotation.x = THREE.MathUtils.lerp(
-//   THREE.MathUtils.degToRad(89.813),
-//   THREE.MathUtils.degToRad(85),
-//   progress / 0.32
-// );
-
-//-0.91 for y value 
+camera.rotation.x = THREE.MathUtils.lerp(
+    THREE.MathUtils.degToRad(89.813),
+    THREE.MathUtils.degToRad(89.813),
+    cameraProgress
+  );
 
 
   }
+  
+  
+  //50 to 64 mesh ani
 
-  // ==========================================
-  // 50% → 64%
-  // GLB ANIMATION: 32 → 64
-  // ==========================================
+  
 
   if (
     progress >= 0.50 &&
@@ -420,12 +373,7 @@ scene.add(axesHelper);
 
     mixer.update(0);
   }
-
-  // ==========================================
-  // 64% → 82%
-  // CAMERA 2
-  // GLB FROZEN AT 64%
-  // ==========================================
+//64 to 82 cam2 
 
   if (
     progress >= 0.64 &&
@@ -442,30 +390,30 @@ scene.add(axesHelper);
 
     camera.position.x =
       THREE.MathUtils.lerp(
-        3,
+        2,
         -3,
         cameraProgress
       );
 
     camera.position.y =
       THREE.MathUtils.lerp(
-        -125,
+        -110,
         -145,
         cameraProgress
       );
 
     camera.position.z =
       THREE.MathUtils.lerp(
-        20,
+        33,
         22,
         cameraProgress
       );
   }
 
-  // ==========================================
-  // 82% → 100%
-  // GLB ANIMATION: 64 → 100
-  // ==========================================
+  
+  // 82% → 100% cam kind of misx one 
+  // 64 to 100 mesh ani
+  
 
   if (progress >= 0.82) {
     const pageProgress =
