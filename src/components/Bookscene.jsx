@@ -141,9 +141,11 @@ export const Bookscene = () => {
 
         bookWrapper.rotation.set(
           THREE.MathUtils.degToRad(360),
-          THREE.MathUtils.degToRad(170),
+          THREE.MathUtils.degToRad(185), 
           THREE.MathUtils.degToRad(180)
         );
+
+       
 
         bookWrapper.scale.set(
           2.2,
@@ -154,52 +156,6 @@ export const Bookscene = () => {
         scene.add(bookWrapper);
         const axesHelper = new THREE.AxesHelper(50);
 scene.add(axesHelper);
-
-        const shadowCanvas = document.createElement("canvas");
-        shadowCanvas.width = 256;
-        shadowCanvas.height = 256;
-        const shadowCtx = shadowCanvas.getContext("2d");
-        const shadowGradient = shadowCtx.createRadialGradient(
-          128, 128, 0,
-          128, 128, 128
-        );
-        shadowGradient.addColorStop(0, "rgba(0,0,0,0.6)");
-        shadowGradient.addColorStop(0.7, "rgba(0,0,0,0.25)");
-        shadowGradient.addColorStop(1, "rgba(0,0,0,0)");
-        shadowCtx.fillStyle = shadowGradient;
-        shadowCtx.fillRect(0, 0, 256, 256);
-
-        const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
-
-        const shadowMaterial = new THREE.MeshBasicMaterial({
-          map: shadowTexture,
-          transparent: true,
-          depthWrite: false,
-          depthTest: false,
-          side: THREE.DoubleSide,
-        });
-
-        const SHADOW_OFFSET_X = 0;
-        const SHADOW_OFFSET_Y = -8;
-        const SHADOW_OFFSET_Z = 0;
-
-        const shadowGeometry = new THREE.PlaneGeometry(40, 25);
-
-        const shadowMesh = new THREE.Mesh(
-          shadowGeometry,
-          shadowMaterial
-        );
-
-        shadowMesh.rotation.x = -Math.PI / 2;
-        shadowMesh.renderOrder = -1;
-
-        shadowMesh.position.set(
-          SHADOW_OFFSET_X,
-          SHADOW_OFFSET_Y,
-          SHADOW_OFFSET_Z
-        );
-
-        bookWrapper.add(shadowMesh);
 
         mixer = new THREE.AnimationMixer(
           bookObject
@@ -282,6 +238,11 @@ scene.add(axesHelper);
     return;
   }
 
+  // ==========================================
+  // 0% → 32%
+  // GLB ANIMATION: 0 → 32
+  // ==========================================
+
   if (progress <= 0.32) {
     
     const pageProgress = gsap.utils.mapRange(
@@ -302,36 +263,51 @@ scene.add(axesHelper);
 
 
    
+  bookWrapper.rotation.y = THREE.MathUtils.lerp(
+  THREE.MathUtils.degToRad(185), // starting value (your original setup value)
+  THREE.MathUtils.degToRad(170), // target value at 32% — set this to whatever you actually want it to end at
+  progress / 0.32
+);
+          
+        
 
     //camera before 32 frame 
 
      camera.position.x = THREE.MathUtils.lerp(
     1.208,
-    3,
+    2,
     progress / 0.32
   );
 
   camera.position.y = THREE.MathUtils.lerp(
     -135.43,
-    -90,
+    -110,
     progress / 0.32
   );
 
+  
+
   camera.position.z = THREE.MathUtils.lerp(
     32.593,
-    25,
+    35,
     progress / 0.32
     
   );
 
+  
 
-  // mesh position
-  bookWrapper.rotation.z = THREE.MathUtils.degToRad(
-    185
-  );
+
+
+
 
 
   }
+
+  // ==========================================
+  // 32% → 50%
+  // CAMERA 1
+  // GLB FROZEN AT 32%
+  // ==========================================
 
   if (
     progress >= 0.32 &&
@@ -348,74 +324,79 @@ scene.add(axesHelper);
 
  
 
-     camera.position.x = THREE.MathUtils.lerp(
-    1.208,
-    2,
-    progress / 0.32
-  );
+//      camera.position.x = THREE.MathUtils.lerp(
+//     1.208,
+//     2,
+//     progress / 0.32
+//   );
 
-     camera.position.z = THREE.MathUtils.lerp(
-    32.593,
-    34,
-    progress / 0.32
+//      camera.position.z = THREE.MathUtils.lerp(
+//     32.593,
+//     34,
+//     progress / 0.32
     
-  );
+//   );
 
-     camera.position.x = THREE.MathUtils.lerp(
-    2,
-    3,
-    progress / 0.32
-  );
+//      camera.position.x = THREE.MathUtils.lerp(
+//     2,
+//     3,
+//     progress / 0.32
+//   );
 
-  camera.position.y = THREE.MathUtils.lerp(
-    -135.43,
-    -85,
-    progress / 0.32
-  );
+//   camera.position.y = THREE.MathUtils.lerp(
+//     -135.43,
+//     -85,
+//     progress / 0.32
+//   );
 
  
 
  
 
 
-    camera.position.z = THREE.MathUtils.lerp(
-    34,
-    36,
-    progress / 0.32
+//     camera.position.z = THREE.MathUtils.lerp(
+//     34,
+//     36,
+//     progress / 0.32
     
-  );
+//   );
 
-    camera.position.z = THREE.MathUtils.lerp(
-    36,
-    38,
-    progress / 0.32
+//     camera.position.z = THREE.MathUtils.lerp(
+//     36,
+//     38,
+//     progress / 0.32
     
-  );
+//   );
 
-    camera.position.z = THREE.MathUtils.lerp(
-    32.593,
-    40,
-    progress / 0.32
+//     camera.position.z = THREE.MathUtils.lerp(
+//     32.593,
+//     40,
+//     progress / 0.32
     
-  );
+//   );
 
-  camera.rotation.z = THREE.MathUtils.lerp(
-  THREE.MathUtils.degToRad(-4.7326),
-  THREE.MathUtils.degToRad(-5),
-  progress / 0.32
-);
+//   camera.rotation.z = THREE.MathUtils.lerp(
+//   THREE.MathUtils.degToRad(-4.7326),
+//   THREE.MathUtils.degToRad(4),
+//   progress / 0.32
+// );
 
 
-  camera.rotation.x = THREE.MathUtils.lerp(
-  THREE.MathUtils.degToRad(89.813),
-  THREE.MathUtils.degToRad(85),
-  progress / 0.32
-);
+//   camera.rotation.x = THREE.MathUtils.lerp(
+//   THREE.MathUtils.degToRad(89.813),
+//   THREE.MathUtils.degToRad(85),
+//   progress / 0.32
+// );
 
 //-0.91 for y value 
 
 
   }
+
+  // ==========================================
+  // 50% → 64%
+  // GLB ANIMATION: 32 → 64
+  // ==========================================
 
   if (
     progress >= 0.50 &&
@@ -439,6 +420,12 @@ scene.add(axesHelper);
 
     mixer.update(0);
   }
+
+  // ==========================================
+  // 64% → 82%
+  // CAMERA 2
+  // GLB FROZEN AT 64%
+  // ==========================================
 
   if (
     progress >= 0.64 &&
@@ -474,6 +461,11 @@ scene.add(axesHelper);
         cameraProgress
       );
   }
+
+  // ==========================================
+  // 82% → 100%
+  // GLB ANIMATION: 64 → 100
+  // ==========================================
 
   if (progress >= 0.82) {
     const pageProgress =
