@@ -316,35 +316,71 @@ camera.rotation.z = THREE.MathUtils.lerp(
 
   //32 to 40 cam1
 
-  if (
-    progress >= 0.32 &&
-    progress <= 0.50
-  ) {
-    const cameraProgress =
-      gsap.utils.mapRange(
-        0.32,
-        0.50,
-        0,
-        1,
-        progress
-      );
+ //32 to 40 cam1
 
+if (
+  progress >= 0.32 &&
+  progress <= 0.50
+) {
+  const cameraProgress =
+    gsap.utils.mapRange(
+      0.32,
+      0.50,
+      0,
+      1,
+      progress
+    );
 
- camera.position.y = THREE.MathUtils.lerp(
-    -110,
-    -110,
+  camera.position.x = THREE.MathUtils.lerp(
+    -5,
+    -8,
     cameraProgress
   );
 
+  camera.position.y = THREE.MathUtils.lerp(
+    -110,
+    -75,
+    cameraProgress
+  );
 
-camera.rotation.x = THREE.MathUtils.lerp(
-    THREE.MathUtils.degToRad(89.813),
+  camera.position.z = THREE.MathUtils.lerp(
+    40,
+    27,
+    cameraProgress
+  );
+
+  camera.rotation.x = THREE.MathUtils.lerp(
+    THREE.MathUtils.degToRad(86),
     THREE.MathUtils.degToRad(89.813),
     cameraProgress
   );
 
+  camera.rotation.y = THREE.MathUtils.lerp(
+    THREE.MathUtils.degToRad(-3),
+    THREE.MathUtils.degToRad(-0.9619),
+    cameraProgress
+  );
 
-  }
+  camera.rotation.z = THREE.MathUtils.lerp(
+    THREE.MathUtils.degToRad(-7),
+    THREE.MathUtils.degToRad(8),
+    cameraProgress
+  );
+
+  camera.position.y = THREE.MathUtils.lerp(
+  -110,
+  -65,
+  cameraProgress
+);
+
+
+camera.position.x = THREE.MathUtils.lerp(
+  -5,
+  -30,  //20
+  cameraProgress
+);
+
+}
   
   
   //50 to 64 mesh ani
