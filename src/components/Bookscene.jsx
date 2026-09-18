@@ -318,68 +318,26 @@ camera.rotation.z = THREE.MathUtils.lerp(
 
  //32 to 40 cam1
 
-if (
-  progress >= 0.32 &&
-  progress <= 0.50
-) {
-  const cameraProgress =
-    gsap.utils.mapRange(
-      0.32,
-      0.50,
-      0,
-      1,
-      progress
-    );
+if (progress >= 0.32 && progress <= 0.50) {
+  const cp = gsap.utils.mapRange(0.32, 0.50, 0, 1, progress);
 
-  camera.position.x = THREE.MathUtils.lerp(
-    -5,
-    -8,
-    cameraProgress
+  camera.position.set(
+    THREE.MathUtils.lerp(-5, -30, cp),
+    THREE.MathUtils.lerp(-110, -65, cp),
+    THREE.MathUtils.lerp(40, 27, cp)
   );
 
-  camera.position.y = THREE.MathUtils.lerp(
-    -110,
-    -75,
-    cameraProgress
+  camera.rotation.set(
+    THREE.MathUtils.lerp(THREE.MathUtils.degToRad(86), THREE.MathUtils.degToRad(89.813), cp),
+    THREE.MathUtils.lerp(THREE.MathUtils.degToRad(-3), THREE.MathUtils.degToRad(-0.9619), cp),
+    THREE.MathUtils.lerp(THREE.MathUtils.degToRad(-7), THREE.MathUtils.degToRad(8), cp)
   );
 
-  camera.position.z = THREE.MathUtils.lerp(
-    40,
-    27,
-    cameraProgress
-  );
-
-  camera.rotation.x = THREE.MathUtils.lerp(
-    THREE.MathUtils.degToRad(86),
-    THREE.MathUtils.degToRad(89.813),
-    cameraProgress
-  );
-
-  camera.rotation.y = THREE.MathUtils.lerp(
-    THREE.MathUtils.degToRad(-3),
-    THREE.MathUtils.degToRad(-0.9619),
-    cameraProgress
-  );
-
-  camera.rotation.z = THREE.MathUtils.lerp(
-    THREE.MathUtils.degToRad(-7),
-    THREE.MathUtils.degToRad(8),
-    cameraProgress
-  );
-
-  camera.position.y = THREE.MathUtils.lerp(
-  -110,
-  -65,
-  cameraProgress
-);
-
-
-camera.position.x = THREE.MathUtils.lerp(
-  -5,
-  -30,  //20
-  cameraProgress
-);
-
+  // shift sideways relative to what the camera is actually looking at,
+  // not world space — this is the part that should reveal the rest of the book
+  const rightAmount = THREE.MathUtils.lerp(0, 8, cp); // tune this number
+  const rightVec = new THREE.Vector3(1, 0, 0).applyEuler(camera.rotation);
+  camera.position.addScaledVector(rightVec, rightAmount);
 }
   
   
