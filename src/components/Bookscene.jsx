@@ -231,208 +231,52 @@ scene.add(axesHelper);
 
       markers: true,
 
-       onUpdate: (self) => {
+ onUpdate: (self) => {
   const progress = self.progress;
 
-  if (!mixer || actions.length === 0) {
+  if (!mixer || actions.length === 0 || !bookWrapper) {
     return;
   }
 
-//0 to 32% mesh ani 
+  // Advance the book animation over the entire scroll range. The old code
+  // skipped 32–50% and 64–82%, which caused the page turn to freeze.
+  const t = progress * totalDuration;
+  actions.forEach((action) => {
+    action.time = t;
+  });
+  mixer.update(0);
 
-  if (progress <= 0.32) {
-    
-    const pageProgress = gsap.utils.mapRange(
-      0,
-      0.32,
-      0,
-      0.32,
-      progress
-    );
+  // Keep the original intro camera motion, then hold its final pose.
+  // This is clamped so reverse-scrolling also remains smooth.
+  const introProgress = Math.min(progress, 0.32) / 0.32;
 
-    const t = pageProgress * totalDuration;
-
-    actions.forEach((action) => {
-      action.time = t;
-    });
-
-    mixer.update(0);
-
-
-   
   bookWrapper.rotation.y = THREE.MathUtils.lerp(
-  THREE.MathUtils.degToRad(185), // starting value (your original setup value)
-  THREE.MathUtils.degToRad(170), // target value at 32% — set this to whatever you actually want it to end at
-  progress / 0.32
-);
-          
-        
-
-camera.position.x = THREE.MathUtils.lerp(
-  1.208,
-  -5,
-  progress / 0.32
-);
-
-camera.position.y = THREE.MathUtils.lerp(
-  -135.43,
-  -110,
-  progress / 0.32
-);
-
-camera.position.z = THREE.MathUtils.lerp(
-  32.593,
-  40,
-  progress / 0.32
-);
-
-camera.rotation.x = THREE.MathUtils.lerp(
-  THREE.MathUtils.degToRad(89.813),
-  THREE.MathUtils.degToRad(86),
-  progress / 0.32
-);
-
-camera.rotation.y = THREE.MathUtils.lerp(
-  THREE.MathUtils.degToRad(-0.9619),
-  THREE.MathUtils.degToRad(-3),
-  progress / 0.32
-);
-
-camera.rotation.z = THREE.MathUtils.lerp(
-  THREE.MathUtils.degToRad(-4.7326),
-  THREE.MathUtils.degToRad(-7),
-  progress / 0.32
-);
-
-
-  
-
-
-
-
-
-
-  }
-
-  //32 to 40 cam1
-
- //32 to 40 cam1
-
-if (progress >= 0.32 && progress <= 0.50) {
-  const cp = gsap.utils.mapRange(0.32, 0.50, 0, 1, progress);
-
-  camera.position.set(
-    THREE.MathUtils.lerp(-5, -30, cp),
-    THREE.MathUtils.lerp(-110, -65, cp),
-    THREE.MathUtils.lerp(40, 27, cp)
+    THREE.MathUtils.degToRad(185),
+    THREE.MathUtils.degToRad(170),
+    introProgress
   );
 
-  camera.rotation.set(
-    THREE.MathUtils.lerp(THREE.MathUtils.degToRad(86), THREE.MathUtils.degToRad(89.813), cp),
-    THREE.MathUtils.lerp(THREE.MathUtils.degToRad(-3), THREE.MathUtils.degToRad(-0.9619), cp),
-    THREE.MathUtils.lerp(THREE.MathUtils.degToRad(-7), THREE.MathUtils.degToRad(8), cp)
+  camera.position.x = THREE.MathUtils.lerp(1.208, -5, introProgress);
+  camera.position.y = THREE.MathUtils.lerp(-135.43, -110, introProgress);
+  camera.position.z = THREE.MathUtils.lerp(32.593, 40, introProgress);
+
+  camera.rotation.x = THREE.MathUtils.lerp(
+    THREE.MathUtils.degToRad(89.813),
+    THREE.MathUtils.degToRad(86),
+    introProgress
   );
-
-  // shift sideways relative to what the camera is actually looking at,
-  // not world space — this is the part that should reveal the rest of the book
-  const rightAmount = THREE.MathUtils.lerp(0, 8, cp); // tune this number
-  const rightVec = new THREE.Vector3(1, 0, 0).applyEuler(camera.rotation);
-  camera.position.addScaledVector(rightVec, rightAmount);
-}
-  
-  
-  //50 to 64 mesh ani
-
-  
-
-  if (
-    progress >= 0.50 &&
-    progress <= 0.64
-  ) {
-    const pageProgress =
-      gsap.utils.mapRange(
-        0.50,
-        0.64,
-        0.32,
-        0.64,
-        progress
-      );
-
-    const t =
-      pageProgress * totalDuration;
-
-    actions.forEach((action) => {
-      action.time = t;
-    });
-
-    mixer.update(0);
-  }
-//64 to 82 cam2 
-
-  if (
-    progress >= 0.64 &&
-    progress <= 0.82
-  ) {
-    const cameraProgress =
-      gsap.utils.mapRange(
-        0.64,
-        0.82,
-        0,
-        1,
-        progress
-      );
-
-    camera.position.x =
-      THREE.MathUtils.lerp(
-        2,
-        -3,
-        cameraProgress
-      );
-
-    camera.position.y =
-      THREE.MathUtils.lerp(
-        -110,
-        -145,
-        cameraProgress
-      );
-
-    camera.position.z =
-      THREE.MathUtils.lerp(
-        33,
-        22,
-        cameraProgress
-      );
-  }
-
-  
-  // 82% → 100% cam kind of misx one 
-  // 64 to 100 mesh ani
-  
-
-  if (progress >= 0.82) {
-    const pageProgress =
-      gsap.utils.mapRange(
-        0.82,
-        1,
-        0.64,
-        1,
-        progress
-      );
-
-    const t =
-      pageProgress * totalDuration;
-
-    actions.forEach((action) => {
-      action.time = t;
-    });
-
- 
-    // bookWrapper.rotation.z= THREE.utils.degToRad(190)
-
-
-    mixer.update(0);
-  }
+  camera.rotation.y = THREE.MathUtils.lerp(
+    THREE.MathUtils.degToRad(-0.9619),
+    THREE.MathUtils.degToRad(-3),
+    introProgress
+  );
+  camera.rotation.z = THREE.MathUtils.lerp(
+    THREE.MathUtils.degToRad(-4.7326),
+    THREE.MathUtils.degToRad(-7),
+    introProgress
+  );
 },
+
     });
 
     return () => {
