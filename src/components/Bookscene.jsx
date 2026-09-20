@@ -3,7 +3,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-
 import page1 from "../assets/bookpage1.png";
 import page2 from "../assets/bookpage2.png";
 import page3 from '../assets/bookpage3.jpg'
@@ -50,19 +49,41 @@ export const Bookscene = () => {
       container.clientHeight
     );
 
+    // Turn on shadows so the book can cast one, like the reference image
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
     container.appendChild(renderer.domElement);
 
     const light = new THREE.DirectionalLight(
-      0xffffff,
+      0xfff3e0, // warm white instead of pure white, for the cozy vibe
       3
     );
 
-    light.position.set(10, 10, 10);
+    light.position.set(1.208, -20.43, 32.593);
+
+    // Let this light cast a shadow, and set up its shadow camera frustum
+    light.castShadow = true;
+    light.shadow.mapSize.width = 2048;
+    light.shadow.mapSize.height = 2048;
+    light.shadow.camera.near = 0.1;
+    light.shadow.camera.far = 300;
+    light.shadow.camera.left = -60;
+    light.shadow.camera.right = 60;
+    light.shadow.camera.top = 60;
+    light.shadow.camera.bottom = -60;
+    light.shadow.bias = -0.0015;
+
     scene.add(light);
 
+    //helper only (left here in case you need to re-debug light aim,
+    // but not added to the scene so it won't show up in the render)
+    const directionalLightHelper = new THREE.DirectionalLightHelper(light, 8, 0xff0000);
+    scene.add(directionalLightHelper);
+
     const ambient = new THREE.AmbientLight(
-      0xffffff,
-      1
+      0xffe3c2, // warm tint instead of flat white
+      0.5        // lowered from 1 — a strong ambient washes the shadow out
     );
 
     scene.add(ambient);
@@ -71,6 +92,7 @@ export const Bookscene = () => {
     let actions = [];
     let totalDuration = 1;
     let bookWrapper = null;
+    let shadowPlane = null;
 
     const loader = new GLTFLoader();
 
@@ -83,6 +105,8 @@ export const Bookscene = () => {
         bookObject.traverse((child) => {
   if (child.isMesh) {
     console.log("MESH:", child.name);
+    child.castShadow = true;
+    child.receiveShadow = true;
   }
 });
 
@@ -133,8 +157,10 @@ export const Bookscene = () => {
 
         bookWrapper.add(bookObject);
 
+        light.target = bookWrapper;
+
         bookWrapper.position.set(
-          0.39925,
+          -10.39925,
           0.018592,
           30.778
         );
@@ -154,8 +180,22 @@ export const Bookscene = () => {
         );
 
         scene.add(bookWrapper);
-        const axesHelper = new THREE.AxesHelper(50);
-scene.add(axesHelper);
+
+        // Shadow-catcher plane. This is what actually produces the soft
+        // blob under/behind the book — ShadowMaterial is invisible except
+        // where a shadow lands on it, so it blends into your white bg the
+        // same way the vignette does in the reference image.
+        // Tweak position.y and opacity below until it lines up with your book.
+        const shadowPlaneGeo = new THREE.PlaneGeometry(400, 400);
+        const shadowPlaneMat = new THREE.ShadowMaterial({ opacity: 0.35 });
+        shadowPlane = new THREE.Mesh(shadowPlaneGeo, shadowPlaneMat);
+        shadowPlane.rotation.x = Math.PI / 2;
+        shadowPlane.position.set(-10.39925, 15, 30.778);
+        shadowPlane.receiveShadow = true;
+        scene.add(shadowPlane);
+
+        // const axesHelper = new THREE.AxesHelper(50);
+        // scene.add(axesHelper);
 
         mixer = new THREE.AnimationMixer(
           bookObject
@@ -229,47 +269,97 @@ scene.add(axesHelper);
 
       scrub: true,
 
-      markers: true,
+      markers: false,
 
- onUpdate: (self) => {
+onUpdate: (self) => {
   const progress = self.progress;
 
-  if (!mixer || actions.length === 0 || !bookWrapper) {
-    return;
-  }
+  if (!mixer || actions.length === 0 || !bookWrapper) return;
 
-  // Advance the book animation over the entire scroll range. The old code
-  // skipped 32–50% and 64–82%, which caused the page turn to freeze.
+  // Page animation
   const t = progress * totalDuration;
+
   actions.forEach((action) => {
     action.time = t;
   });
+
   mixer.update(0);
 
-  // Keep the original intro camera motion, then hold its final pose.
-  // This is clamped so reverse-scrolling also remains smooth.
+  // Book rotation
+  if (progress <= 0.32) {
+    bookWrapper.rotation.y = THREE.MathUtils.lerp(
+      THREE.MathUtils.degToRad(185),
+      THREE.MathUtils.degToRad(170),
+      progress / 0.32
+    );
+  } else if (progress <= 0.64) {
+    const secondPageProgress = gsap.utils.mapRange(
+      0.32,
+      0.64,
+      0,
+      1,
+      progress
+    );
+
+    bookWrapper.rotation.y = THREE.MathUtils.lerp(
+      THREE.MathUtils.degToRad(170),
+      THREE.MathUtils.degToRad(185),
+      secondPageProgress
+    );
+  } else if (progress <= 0.9) {
+  bookWrapper.rotation.y = THREE.MathUtils.degToRad(185);
+  bookWrapper.rotation.z = THREE.MathUtils.degToRad(180);
+} else {
+  const finalRotationProgress = gsap.utils.mapRange(
+    0.9,
+    1,
+    0,
+    1,
+    progress
+  );
+
+  bookWrapper.rotation.y = THREE.MathUtils.degToRad(185);
+
+  bookWrapper.rotation.z = THREE.MathUtils.lerp(
+    THREE.MathUtils.degToRad(180),
+    THREE.MathUtils.degToRad(360),
+    finalRotationProgress
+  );
+}
+
+  // Camera movement
   const introProgress = Math.min(progress, 0.32) / 0.32;
 
-  bookWrapper.rotation.y = THREE.MathUtils.lerp(
-    THREE.MathUtils.degToRad(185),
-    THREE.MathUtils.degToRad(170),
+  camera.position.x = THREE.MathUtils.lerp(
+    1.208,
+    -5,
     introProgress
   );
 
-  camera.position.x = THREE.MathUtils.lerp(1.208, -5, introProgress);
-  camera.position.y = THREE.MathUtils.lerp(-135.43, -110, introProgress);
-  camera.position.z = THREE.MathUtils.lerp(32.593, 40, introProgress);
+  camera.position.y = THREE.MathUtils.lerp(
+    -135.43,
+    -110,
+    introProgress
+  );
+
+  camera.position.z = THREE.MathUtils.lerp(
+    32.593,
+    40,
+    introProgress
+  );
 
   camera.rotation.x = THREE.MathUtils.lerp(
     THREE.MathUtils.degToRad(89.813),
-    THREE.MathUtils.degToRad(86),
+    THREE.MathUtils.degToRad(85),
     introProgress
   );
+
   camera.rotation.y = THREE.MathUtils.lerp(
     THREE.MathUtils.degToRad(-0.9619),
     THREE.MathUtils.degToRad(-3),
     introProgress
   );
+
   camera.rotation.z = THREE.MathUtils.lerp(
     THREE.MathUtils.degToRad(-4.7326),
     THREE.MathUtils.degToRad(-7),
