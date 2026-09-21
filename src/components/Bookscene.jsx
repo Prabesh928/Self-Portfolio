@@ -57,10 +57,10 @@ export const Bookscene = () => {
 
     const light = new THREE.DirectionalLight(
       0xfff3e0, // warm white instead of pure white, for the cozy vibe
-      3
+         2
     );
 
-    light.position.set(1.208, -20.43, 32.593);
+    light.position.set(-3, -20.43, 32.593);
 
     // Let this light cast a shadow, and set up its shadow camera frustum
     light.castShadow = true;
@@ -76,14 +76,13 @@ export const Bookscene = () => {
 
     scene.add(light);
 
-    //helper only (left here in case you need to re-debug light aim,
-    // but not added to the scene so it won't show up in the render)
+    
     const directionalLightHelper = new THREE.DirectionalLightHelper(light, 8, 0xff0000);
     scene.add(directionalLightHelper);
 
     const ambient = new THREE.AmbientLight(
-      0xffe3c2, // warm tint instead of flat white
-      0.5        // lowered from 1 — a strong ambient washes the shadow out
+      0xffe3c2, 
+      0.5      
     );
 
     scene.add(ambient);
@@ -181,11 +180,7 @@ export const Bookscene = () => {
 
         scene.add(bookWrapper);
 
-        // Shadow-catcher plane. This is what actually produces the soft
-        // blob under/behind the book — ShadowMaterial is invisible except
-        // where a shadow lands on it, so it blends into your white bg the
-        // same way the vignette does in the reference image.
-        // Tweak position.y and opacity below until it lines up with your book.
+       
         const shadowPlaneGeo = new THREE.PlaneGeometry(400, 400);
         const shadowPlaneMat = new THREE.ShadowMaterial({ opacity: 0.35 });
         shadowPlane = new THREE.Mesh(shadowPlaneGeo, shadowPlaneMat);
@@ -194,8 +189,7 @@ export const Bookscene = () => {
         shadowPlane.receiveShadow = true;
         scene.add(shadowPlane);
 
-        // const axesHelper = new THREE.AxesHelper(50);
-        // scene.add(axesHelper);
+        
 
         mixer = new THREE.AnimationMixer(
           bookObject
@@ -396,7 +390,7 @@ onUpdate: (self) => {
   return (
     <div
       ref={blueRef}
-      className="h-[100vh] w-full bg-white"
+      className="h-[100vh] w-full bg-[#F5F2EA]"
     >
       <div
         ref={canvasContainerRef}
