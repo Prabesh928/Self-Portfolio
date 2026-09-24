@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Dynamicnumbers = ({ activeIndex = 0 }) => {
-  const numbers = ["01", "02", "03", "04", "05", "06"]
+  const numbers = ["01", "02", "03"]
 
   return (
     <div className="first flex h-full w-[10%] flex-col items-center justify-between py-12 text-[#2A2A2A] select-none">

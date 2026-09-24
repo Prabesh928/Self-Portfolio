@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
@@ -13,6 +13,8 @@ gsap.registerPlugin(ScrollTrigger);
 export const Bookscene = () => {
   const blueRef = useRef(null);
   const canvasContainerRef = useRef(null);
+  const activeIndexRef = useRef(0);              // <-- CHANGE 1: added
+  const [activeIndex, setActiveIndex] = useState(0); // <-- CHANGE 1: added
 
   useEffect(() => {
     const container = canvasContainerRef.current;
@@ -280,6 +282,22 @@ onUpdate: (self) => {
 
   mixer.update(0);
 
+  // Dynamic page number indicator (matches the 3 rotation breakpoints below)  <-- CHANGE 2: added block
+  let newIndex;
+  if (progress <= 0.32) {
+    newIndex = 0; // page 1 turning
+  } else if (progress <= 0.64) {
+    newIndex = 1; // page 2 turning
+  } else {
+    newIndex = 2; // page 3 / closing
+  }
+
+  if (newIndex !== activeIndexRef.current) {
+    activeIndexRef.current = newIndex;
+    setActiveIndex(newIndex);
+  }
+  // <-- CHANGE 2 ends here
+
   // Book rotation
   if (progress <= 0.32) {
     bookWrapper.rotation.y = THREE.MathUtils.lerp(
@@ -399,7 +417,7 @@ onUpdate: (self) => {
     
  
 
-<Dynamicnumbers />
+<Dynamicnumbers activeIndex={activeIndex} />   {/* <-- CHANGE 3: added prop */}
 
     <div
       ref={canvasContainerRef}
