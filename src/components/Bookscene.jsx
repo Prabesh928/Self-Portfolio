@@ -13,8 +13,8 @@ gsap.registerPlugin(ScrollTrigger);
 export const Bookscene = () => {
   const blueRef = useRef(null);
   const canvasContainerRef = useRef(null);
-  const activeIndexRef = useRef(0);              // <-- CHANGE 1: added
-  const [activeIndex, setActiveIndex] = useState(0); // <-- CHANGE 1: added
+  const activeIndexRef = useRef(0);             
+  const [activeIndex, setActiveIndex] = useState(0); 
 
   useEffect(() => {
     const container = canvasContainerRef.current;
@@ -417,7 +417,7 @@ onUpdate: (self) => {
     
  
 
-<Dynamicnumbers activeIndex={activeIndex} />   {/* <-- CHANGE 3: added prop */}
+<Dynamicnumbers activeIndex={activeIndex} / >  
 
     <div
       ref={canvasContainerRef}
